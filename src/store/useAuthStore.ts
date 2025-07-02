@@ -2,6 +2,11 @@ import { create } from "zustand";
 import api from "../utils/api";
 
 interface User {
+  lookingFor: string;
+  description: string;
+  status: string;
+  age: number;
+  university: string;
   gender: string;
   id: string;
   email: string;
