@@ -5,8 +5,10 @@ import Sidebar from "../components/Sidebar";
 export default function MainLayout() {
   return (
     <div className="w-screen h-screen flex gap-4">
-      <Sidebar />
-      <div className="flex flex-col">
+      <div className="w-1/4">
+        <Sidebar />
+      </div>
+      <div className="flex flex-col w-4/5">
         <Headbar />
         <Outlet />
       </div>
