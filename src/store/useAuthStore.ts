@@ -16,7 +16,24 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (formData: any) => Promise<void>;
+  register: (formData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    age: string;
+    gender: string;
+    university: string;
+    status: string;
+    description: string;
+    lookingFor: string;
+    guardianEmail?: string;
+    guardianPhone?: string;
+    paypalOrderId: string;
+    cardLast4: string;    
+    cardProcessor: string;
+    agreeTerms: boolean;
+  }) => Promise<void>;
   logout: () => void;
 }
 

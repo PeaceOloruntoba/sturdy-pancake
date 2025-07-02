@@ -1,9 +1,11 @@
+// pages/auth/Signup.tsx
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router";
 import { toast } from "sonner";
 import { useAuthStore } from "../../store/useAuthStore";
 import { FaHeart, FaArrowLeft } from "react-icons/fa";
 import { Button } from "../../components/Button";
+import api from "../../utils/api";
 
 declare global {
   interface Window {
@@ -13,7 +15,7 @@ declare global {
 
 export default function SignupPage() {
   const navigate = useNavigate();
-  const { register, isLoading, error } = useAuthStore();
+  const { register, isLoading, error, user, token } = useAuthStore();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     email: "",
@@ -29,18 +31,82 @@ export default function SignupPage() {
     lookingFor: "",
     guardianEmail: "",
     guardianPhone: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
+    paypalOrderId: "",
+    cardLast4: "",
+    cardProcessor: "",
     agreeTerms: false,
   });
   const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const [cardFields, setCardFields] = useState<any>(null);
 
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
   }, [error]);
+
+  useEffect(() => {
+    if (user && token) {
+      navigate("/dashboard");
+      toast.info("You are already logged in!");
+    }
+  }, [user, token, navigate]);
+
+  useEffect(() => {
+    if (paypalLoaded && window.paypal && step === 3 && !cardFields) {
+      try {
+        // PayPal Card Fields instance setup
+        const fields = window.paypal.CardFields({
+          createOrder: async () => {
+            try {
+              const response = await api.post("/auth/paypal/create-order"); // Call your new backend endpoint
+              const { orderId } = response.data;
+              return orderId; // Return the order ID to PayPal
+            } catch (err: any) {
+              toast.error(`Failed to initiate PayPal order: ${err.message}`);
+              console.error("PayPal createOrder error:", err);
+              throw err; // Re-throw to prevent PayPal from proceeding
+            }
+          },
+          onApprove: (data: any) => {
+            console.log("PayPal authorization approved:", data.orderID);
+            setFormData((prev) => ({
+              ...prev,
+              paypalOrderId: data.orderID,
+              cardLast4: data.paymentSource?.card?.last_digits || "XXXX", // Attempt to get last4 if available
+              cardProcessor: "paypal",
+            }));
+            toast.success("Payment details validated successfully!");
+            handleNext(); // Move to T&C after successful payment validation
+          },
+          onError: (err: any) => {
+            toast.error(
+              `PayPal error: ${err.message || "An unknown error occurred."}`
+            );
+            console.error("PayPal Card Fields Error:", err);
+          },
+        });
+
+        // Render the PayPal Card Fields into the designated divs
+        fields.render({
+          cardNumber: "#card-number-field",
+          expirationDate: "#expiration-date-field",
+          cvv: "#cvv-field",
+        });
+        setCardFields(fields);
+      } catch (err: any) {
+        toast.error(`Error setting up PayPal card fields: ${err.message}`);
+      }
+    }
+
+    // Cleanup PayPal Card Fields on unmount or step change
+    return () => {
+      if (cardFields) {
+        cardFields.close();
+        setCardFields(null);
+      }
+    };
+  }, [paypalLoaded, step, cardFields]); // Removed formData from dependencies to prevent re-initialization loop
 
   const handleNext = () => {
     if (step === 1) {
@@ -77,12 +143,8 @@ export default function SignupPage() {
         toast.error("Guardian details are required for female users.");
         return;
       }
-    } else if (step === 3) {
-      if (!formData.cardNumber || !formData.expiryDate || !formData.cvv) {
-        toast.error("Please fill in all payment details.");
-        return;
-      }
     }
+    // No specific validation needed for step 3 here, as PayPal handles it
     setStep(step + 1);
   };
 
@@ -97,6 +159,7 @@ export default function SignupPage() {
     }
 
     try {
+      // Pass the complete formData including paypalOrderId, cardLast4, cardProcessor
       await register(formData);
       toast.success("Registration successful! Welcome to Unistudents Match.");
       navigate("/dashboard");
@@ -109,13 +172,39 @@ export default function SignupPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Function to trigger the PayPal card payment submission (authorization)
+  const handlePayPalCardAuthorization = async () => {
+    if (!cardFields || !paypalLoaded) {
+      toast.error("Payment system not ready. Please try again.");
+      return;
+    }
+    try {
+      // This will trigger the createOrder and onApprove callbacks in PayPal Card Fields
+      await cardFields.submit();
+    } catch (err: any) {
+      // Errors are already handled by onError in the CardFields configuration
+      console.error(
+        "Error submitting PayPal Card Fields for authorization:",
+        err
+      );
+    }
+  };
+
   return (
     <>
+      {/* It's often better to load the PayPal SDK script once in your public/index.html
+          or at the root of your application to prevent re-loading on every component render.
+          However, for demonstration, it's here. */}
       <script
         src={`https://www.paypal.com/sdk/js?client-id=${
           import.meta.env.VITE_PAYPAL_CLIENT_ID
         }&components=card-fields`}
         onLoad={() => setPaypalLoaded(true)}
+        onError={() =>
+          toast.error(
+            "Failed to load PayPal SDK. Please check your internet connection or client ID."
+          )
+        }
       />
       <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 py-8">
         <div className="container mx-auto px-4">
@@ -457,61 +546,23 @@ export default function SignupPage() {
                       <li>• £14.99/month after trial period</li>
                     </ul>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="cardNumber"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Card Number
-                    </label>
-                    <input
-                      id="cardNumber"
-                      type="text"
-                      value={formData.cardNumber}
-                      onChange={(e) =>
-                        updateFormData("cardNumber", e.target.value)
-                      }
-                      className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                      placeholder="1234 5678 9012 3456"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label
-                        htmlFor="expiryDate"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Expiry Date
-                      </label>
-                      <input
-                        id="expiryDate"
-                        type="text"
-                        value={formData.expiryDate}
-                        onChange={(e) =>
-                          updateFormData("expiryDate", e.target.value)
-                        }
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        placeholder="MM/YY"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="cvv"
-                        className="block text-sm洗
-                        font-medium text-gray-700"
-                      >
-                        CVV
-                      </label>
-                      <input
-                        id="cvv"
-                        type="text"
-                        value={formData.cvv}
-                        onChange={(e) => updateFormData("cvv", e.target.value)}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        placeholder="123"
-                      />
+                  {/* PayPal Card Fields will be rendered here */}
+                  <div
+                    id="card-fields-container"
+                    className="border border-gray-300 rounded-md p-2"
+                  >
+                    {/* These divs will be populated by PayPal Card Fields SDK */}
+                    <div id="card-number-field"></div>
+                    <div className="grid grid-cols-2 gap-4 mt-2">
+                      <div id="expiration-date-field"></div>
+                      <div id="cvv-field"></div>
                     </div>
                   </div>
+                  {!paypalLoaded && (
+                    <p className="text-center text-gray-500">
+                      Loading payment options...
+                    </p>
+                  )}
                   <div className="flex space-x-4">
                     <Button
                       variant="outline"
@@ -522,11 +573,11 @@ export default function SignupPage() {
                       Back
                     </Button>
                     <Button
-                      onClick={handleNext}
+                      onClick={handlePayPalCardAuthorization}
                       className="flex-1"
                       disabled={isLoading || !paypalLoaded}
                     >
-                      Continue
+                      Validate Payment Details
                     </Button>
                   </div>
                 </div>
@@ -588,8 +639,10 @@ export default function SignupPage() {
                       onClick={handleSubmit}
                       className="flex-1"
                       disabled={
-                        !formData.agreeTerms || isLoading || !paypalLoaded
-                      }
+                        !formData.agreeTerms ||
+                        isLoading ||
+                        !formData.paypalOrderId
+                      } // Ensure PayPal order is authorized
                     >
                       Start Free Trial
                     </Button>
