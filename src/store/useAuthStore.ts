@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 import api from "../utils/api";
 
 interface User {
@@ -7,8 +6,8 @@ interface User {
   email: string;
   firstName: string;
   lastName: string;
-  isAdmin?: boolean;
-  hasActiveSubscription?: boolean;
+  isAdmin: boolean;
+  hasActiveSubscription: boolean;
 }
 
 interface AuthState {
@@ -16,117 +15,75 @@ interface AuthState {
   token: string | null;
   isLoading: boolean;
   error: string | null;
+  register: (userData: any) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
-  register: (formData: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    age: string;
-    gender: string;
-    university: string;
-    status: string;
-    description: string;
-    lookingFor: string;
-    guardianEmail?: string;
-    guardianPhone?: string;
-    agreeTerms: boolean;
-  }) => Promise<void>;
-  subscribe: (paymentDetails: {
-    cardNumber: string;
-    expiryDate: string;
-    cvv: string;
-  }) => Promise<void>;
   logout: () => void;
-  updateUser: (userData: Partial<User>) => void;
+  setSubscriptionStatus: (status: boolean) => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      token: null,
-      isLoading: false,
-      error: null,
-      login: async (email: string, password: string) => {
-        set({ isLoading: true, error: null });
-        try {
-          const response = await api.post("/auth/login", { email, password });
-          const { token, userId, hasActiveSubscription } = response.data;
-          set({
-            user: {
-              id: userId,
-              email,
-              firstName: response.data.firstName || "",
-              lastName: response.data.lastName || "",
-              isAdmin: response.data.isAdmin || false,
-              hasActiveSubscription: hasActiveSubscription || false,
-            },
-            token,
-            isLoading: false,
-          });
-        } catch (error: any) {
-          set({ isLoading: false, error: error.message });
-          throw error;
-        }
-      },
-      register: async (formData) => {
-        set({ isLoading: true, error: null });
-        try {
-          const response = await api.post("/auth/register", formData);
-          const { token, userId } = response.data;
-          set({
-            user: {
-              id: userId,
-              email: formData.email,
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              isAdmin: false,
-              hasActiveSubscription: false,
-            },
-            token,
-            isLoading: false,
-          });
-        } catch (error: any) {
-          set({ isLoading: false, error: error.message });
-          throw error;
-        }
-      },
-      subscribe: async (paymentDetails) => {
-        set({ isLoading: true, error: null });
-        try {
-          await api.post(
-            "/auth/subscribe",
-            { paymentDetails },
-            {
-              headers: {
-                Authorization: `Bearer ${useAuthStore.getState().token}`,
-              },
-            }
-          );
-          set((state) => ({
-            user: state.user
-              ? { ...state.user, hasActiveSubscription: true }
-              : null,
-            isLoading: false,
-          }));
-        } catch (error: any) {
-          set({ isLoading: false, error: error.message });
-          throw error;
-        }
-      },
-      logout: () => {
-        set({ user: null, token: null, error: null });
-      },
-      updateUser: (userData: Partial<User>) => {
-        set((state) => ({
-          user: state.user ? { ...state.user, ...userData } : null,
-        }));
-      },
-    }),
-    {
-      name: "auth-storage",
-      storage: createJSONStorage(() => localStorage),
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  token: null,
+  isLoading: false,
+  error: null,
+  register: async (userData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await api.post("/auth/register", userData);
+      const { token, userId } = response.data;
+      set({
+        user: {
+          id: userId,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          isAdmin: false,
+          hasActiveSubscription: false,
+        },
+        token,
+        isLoading: false,
+      });
+    } catch (error: any) {
+      set({
+        error: error.response?.data?.error?.message || "Registration failed",
+        isLoading: false,
+      });
+      throw error;
     }
-  )
-);
+  },
+  login: async (email, password) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await api.post("/auth/login", { email, password });
+      const { token, userId, hasActiveSubscription } = response.data;
+      set({
+        user: {
+          id: userId,
+          email,
+          firstName: "",
+          lastName: "",
+          isAdmin: false,
+          hasActiveSubscription,
+        },
+        token,
+        isLoading: false,
+      });
+    } catch (error: any) {
+      set({
+        error: error.response?.data?.error?.message || "Login failed",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+  logout: () => {
+    set({ user: null, token: null, isLoading: false, error: null });
+  },
+  setSubscriptionStatus: (status: boolean) => {
+    set((state) => ({
+      user: state.user
+        ? { ...state.user, hasActiveSubscription: status }
+        : null,
+    }));
+  },
+}));
