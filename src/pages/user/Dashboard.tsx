@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FaComments } from "react-icons/fa";
 import { useAuthStore } from "../../store/useAuthStore";
 import { toast } from "sonner";
-import Filter from "bad-words";
+import { Filter } from "bad-words";
 
 const filter = new Filter();
 
