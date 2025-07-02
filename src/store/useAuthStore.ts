@@ -45,6 +45,12 @@ export const useAuthStore = create<AuthState>((set) => ({
           lastName: userData.lastName,
           isAdmin: false,
           hasActiveSubscription: false,
+          lookingFor: userData?.lookingFor,
+          description: userData?.description,
+          status: userData?.status,
+          age: userData.age,
+          university: userData?.university,
+          gender: userData?.gender,
         },
         token,
         isLoading: false,
@@ -61,17 +67,24 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await api.post("/auth/login", { email, password });
-      const { token, userId, hasActiveSubscription } = response.data;
+      const userData = response.data;
+      const { userId } = response.data;
       set({
         user: {
           id: userId,
-          email,
-          firstName: "",
-          lastName: "",
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
           isAdmin: false,
-          hasActiveSubscription,
+          hasActiveSubscription: false,
+          lookingFor: userData?.lookingFor,
+          description: userData?.description,
+          status: userData?.status,
+          age: userData.age,
+          university: userData?.university,
+          gender: userData?.gender,
         },
-        token,
+        token: userData.age,
         isLoading: false,
       });
     } catch (error: any) {
