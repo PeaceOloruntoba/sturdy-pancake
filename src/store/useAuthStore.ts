@@ -1,7 +1,6 @@
-// store/useAuthStore.ts
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import api from "../utils/api"; // Assuming this is your Axios instance or fetch wrapper
+import api from "../utils/api";
 
 interface User {
   id: string;
@@ -9,19 +8,7 @@ interface User {
   firstName: string;
   lastName: string;
   isAdmin?: boolean;
-  // Add subscription status to the User interface so it can be accessed for redirection
-  subscription?: {
-    status: string;
-    startDate: Date;
-    trialEndsAt: Date;
-    lastPaymentDate?: Date;
-    nextBillingDate?: Date;
-    cardDetails?: {
-      last4?: string;
-      processor?: string;
-      paypalOrderId?: string;
-    };
-  };
+  hasActiveSubscription?: boolean;
 }
 
 interface AuthState {
@@ -30,7 +17,6 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  // Updated register signature to only accept core user data
   register: (formData: {
     email: string;
     password: string;
@@ -46,8 +32,12 @@ interface AuthState {
     guardianPhone?: string;
     agreeTerms: boolean;
   }) => Promise<void>;
+  subscribe: (paymentDetails: {
+    cardNumber: string;
+    expiryDate: string;
+    cvv: string;
+  }) => Promise<void>;
   logout: () => void;
-  // New action to update user data in the store, useful after subscription
   updateUser: (userData: Partial<User>) => void;
 }
 
@@ -62,18 +52,15 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
         try {
           const response = await api.post("/auth/login", { email, password });
-          const { token, userId } = response.data;
-          const userResponse = await api.get(`/users/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const { token, userId, hasActiveSubscription } = response.data;
           set({
             user: {
               id: userId,
-              email: userResponse.data.email, // Ensure email is from response
-              firstName: userResponse.data.firstName,
-              lastName: userResponse.data.lastName,
-              isAdmin: userResponse.data.isAdmin,
-              subscription: userResponse.data.subscription, // Fetch subscription status on login
+              email,
+              firstName: response.data.firstName || "",
+              lastName: response.data.lastName || "",
+              isAdmin: response.data.isAdmin || false,
+              hasActiveSubscription: hasActiveSubscription || false,
             },
             token,
             isLoading: false,
@@ -83,28 +70,46 @@ export const useAuthStore = create<AuthState>()(
           throw error;
         }
       },
-      register: async (formData: any) => {
+      register: async (formData) => {
         set({ isLoading: true, error: null });
         try {
           const response = await api.post("/auth/register", formData);
           const { token, userId } = response.data;
-          // After registration, fetch the full user details including initial subscription status
-          const userResponse = await api.get(`/users/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-
           set({
             user: {
               id: userId,
-              email: userResponse.data.email, // Get email from fetched user data
-              firstName: userResponse.data.firstName,
-              lastName: userResponse.data.lastName,
-              isAdmin: userResponse.data.isAdmin, // Get isAdmin from fetched user data
-              subscription: userResponse.data.subscription, // Get initial subscription status
+              email: formData.email,
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              isAdmin: false,
+              hasActiveSubscription: false,
             },
             token,
             isLoading: false,
           });
+        } catch (error: any) {
+          set({ isLoading: false, error: error.message });
+          throw error;
+        }
+      },
+      subscribe: async (paymentDetails) => {
+        set({ isLoading: true, error: null });
+        try {
+          await api.post(
+            "/auth/subscribe",
+            { paymentDetails },
+            {
+              headers: {
+                Authorization: `Bearer ${useAuthStore.getState().token}`,
+              },
+            }
+          );
+          set((state) => ({
+            user: state.user
+              ? { ...state.user, hasActiveSubscription: true }
+              : null,
+            isLoading: false,
+          }));
         } catch (error: any) {
           set({ isLoading: false, error: error.message });
           throw error;

@@ -5,6 +5,7 @@ import LoginPage from "./pages/auth/Login";
 import { UserGuard } from "./guard/user.guard";
 import { AdminGuard } from "./guard/admin.guard";
 import SignupPage from "./pages/auth/Signup";
+import SubscribePage from "./pages/Subscribe";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/subscribe" element={<SubscribePage/>} />
         {/* Example protected routes */}
         <Route
           path="/dashboard"
