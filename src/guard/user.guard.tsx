@@ -21,5 +21,9 @@ export function UserGuard({ children }: UserGuardProps) {
     return <Navigate to="/login" replace />;
   }
 
+  if (!user.hasActiveSubscription) {
+    return <Navigate to="/subscribe" replace />;
+  }
+
   return <>{children}</>;
 }
