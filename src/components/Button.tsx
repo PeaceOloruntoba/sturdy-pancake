@@ -1,5 +1,5 @@
+import type { ReactNode } from "react";
 import { cn } from "../utils/cn";
-import { ReactNode } from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "ghost" | "outline";
