@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Toaster } from "sonner";
 import HomePage from "./pages/Home";
-import SignupPage from "./pages/auth/Signup";
 import LoginPage from "./pages/auth/Login";
 import { UserGuard } from "./guard/user.guard";
 import { AdminGuard } from "./guard/admin.guard";
+import SignupPage from "./pages/auth/Signup";
 
 export default function App() {
   return (
