@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { FaHome, FaComments, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useAuthStore } from "../store/useAuthStore";
 import { toast } from "sonner";
