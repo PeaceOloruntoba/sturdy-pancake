@@ -1,5 +1,7 @@
 export default function Profile() {
   return (
-    <div>Profile</div>
-  )
+    <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn">
+      Profile (User Protected)
+    </div>
+  );
 }

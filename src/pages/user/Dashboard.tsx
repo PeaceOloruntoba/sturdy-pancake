@@ -1,3 +1,7 @@
 export default function Dashboard() {
-  return <div className="flex items-center gap-8"></div>;
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn">
+      Dashboard (User Protected)
+    </div>
+  );
 }

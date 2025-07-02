@@ -7,6 +7,9 @@ import { AdminGuard } from "./guard/admin.guard";
 import SignupPage from "./pages/auth/Signup";
 import SubscribePage from "./pages/Subscribe";
 import MainLayout from "./layout/MainLayout";
+import Chats from "./pages/user/Chats";
+import Profile from "./pages/user/Profile";
+import Dashboard from "./pages/user/Dashboard";
 
 export default function App() {
   return (
@@ -16,25 +19,42 @@ export default function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/subscribe" element={<SubscribePage />} />
-        {/* Example protected routes */}
         <Route element={<MainLayout />}>
           <Route
             path="/dashboard"
             element={
               <UserGuard>
-                <div>Dashboard (User Protected)</div>
+                <Dashboard />
               </UserGuard>
             }
           />
+          <Route
+            path="/chats"
+            element={
+              <UserGuard>
+                <Chats />
+              </UserGuard>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <UserGuard>
+                <Profile />
+              </UserGuard>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AdminGuard>
+                <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn">
+                  Admin Panel (Admin Protected)
+                </div>
+              </AdminGuard>
+            }
+          />
         </Route>
-        <Route
-          path="/admin"
-          element={
-            <AdminGuard>
-              <div>Admin Panel (Admin Protected)</div>
-            </AdminGuard>
-          }
-        />
       </Routes>
       <Toaster richColors />
     </BrowserRouter>
