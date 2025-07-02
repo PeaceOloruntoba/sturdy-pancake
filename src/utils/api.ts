@@ -1,4 +1,8 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
+import axios, {
+  type AxiosInstance,
+  type InternalAxiosRequestConfig,
+  type AxiosResponse,
+} from "axios";
 import { useAuthStore } from "../store/useAuthStore";
 
 const api: AxiosInstance = axios.create({
@@ -9,11 +13,11 @@ const api: AxiosInstance = axios.create({
 });
 
 api.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = useAuthStore.getState().token;
     if (token) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers = config.headers ?? {};
+      config.headers.set("Authorization", `Bearer ${token}`);
     }
     return config;
   },
