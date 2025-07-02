@@ -1,5 +1,37 @@
+import { BrowserRouter, Routes, Route } from "react-router";
+import { Toaster } from "sonner";
+import HomePage from "./pages/Home";
+import SignupPage from "./pages/auth/Signup";
+import LoginPage from "./pages/auth/Login";
+import { UserGuard } from "./guard/user.guard";
+import { AdminGuard } from "./guard/admin.guard";
+
 export default function App() {
   return (
-    <div>App</div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        {/* Example protected routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <UserGuard>
+              <div>Dashboard (User Protected)</div>
+            </UserGuard>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminGuard>
+              <div>Admin Panel (Admin Protected)</div>
+            </AdminGuard>
+          }
+        />
+      </Routes>
+      <Toaster richColors />
+    </BrowserRouter>
+  );
 }
