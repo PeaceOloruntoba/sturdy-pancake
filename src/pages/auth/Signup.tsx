@@ -9,6 +9,7 @@ export default function SignupPage() {
   const navigate = useNavigate();
   const { register, isLoading, error, user, token } = useAuthStore();
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,6 +30,7 @@ export default function SignupPage() {
   useEffect(() => {
     if (error) {
       toast.error(error);
+      setIsSubmitting(false);
     }
   }, [error]);
 
@@ -88,6 +90,7 @@ export default function SignupPage() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       await register({
         email: formData.email,
@@ -110,6 +113,7 @@ export default function SignupPage() {
       navigate("/subscribe");
     } catch (error: any) {
       toast.error(error.message || "Registration failed. Please try again.");
+      setIsSubmitting(false);
     }
   };
 
@@ -134,7 +138,7 @@ export default function SignupPage() {
           {step === 1 && (
             <div>
               <h2 className="text-2xl font-bold mb-2">Create Your Account</h2>
-              <p className="text-gray-600 mb-6">Start your journey today</p>
+              <p className="text-rose-600 mb-6">Start your journey today</p>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -153,6 +157,7 @@ export default function SignupPage() {
                       }
                       className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                       placeholder="Enter your first name"
+                      disabled={isLoading}
                     />
                   </div>
                   <div>
@@ -171,6 +176,7 @@ export default function SignupPage() {
                       }
                       className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                       placeholder="Enter your last name"
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -188,6 +194,7 @@ export default function SignupPage() {
                     onChange={(e) => updateFormData("email", e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     placeholder="Enter your email"
+                    disabled={isLoading}
                   />
                 </div>
                 <div>
@@ -204,6 +211,7 @@ export default function SignupPage() {
                     onChange={(e) => updateFormData("password", e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     placeholder="Create a password"
+                    disabled={isLoading}
                   />
                 </div>
                 <div>
@@ -222,6 +230,7 @@ export default function SignupPage() {
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     placeholder="Confirm your password"
+                    disabled={isLoading}
                   />
                 </div>
                 <Button
@@ -229,7 +238,7 @@ export default function SignupPage() {
                   className="w-full"
                   disabled={isLoading}
                 >
-                  Continue
+                  {isLoading ? "Processing..." : "Continue"}
                 </Button>
               </div>
             </div>
@@ -238,7 +247,7 @@ export default function SignupPage() {
           {step === 2 && (
             <div>
               <h2 className="text-2xl font-bold mb-2">Personal Information</h2>
-              <p className="text-gray-600 mb-6">Tell us about yourself</p>
+              <p className="text-rose-600 mb-6">Tell us about yourself</p>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -255,6 +264,7 @@ export default function SignupPage() {
                       onChange={(e) => updateFormData("age", e.target.value)}
                       className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                       placeholder="Your age"
+                      disabled={isLoading}
                     />
                   </div>
                   <div>
@@ -271,6 +281,7 @@ export default function SignupPage() {
                             updateFormData("gender", e.target.value)
                           }
                           className="mr-2"
+                          disabled={isLoading}
                         />
                         Male
                       </label>
@@ -283,6 +294,7 @@ export default function SignupPage() {
                             updateFormData("gender", e.target.value)
                           }
                           className="mr-2"
+                          disabled={isLoading}
                         />
                         Female
                       </label>
@@ -305,6 +317,7 @@ export default function SignupPage() {
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     placeholder="Your university"
+                    disabled={isLoading}
                   />
                 </div>
                 <div>
@@ -319,6 +332,7 @@ export default function SignupPage() {
                     value={formData.status}
                     onChange={(e) => updateFormData("status", e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    disabled={isLoading}
                   >
                     <option value="" disabled>
                       Select your status
@@ -343,6 +357,7 @@ export default function SignupPage() {
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     placeholder="Tell us about yourself..."
                     rows={4}
+                    disabled={isLoading}
                   />
                 </div>
                 <div>
@@ -361,6 +376,7 @@ export default function SignupPage() {
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     placeholder="Describe what you're looking for in a partner..."
                     rows={3}
+                    disabled={isLoading}
                   />
                 </div>
                 {formData.gender === "female" && (
@@ -389,6 +405,7 @@ export default function SignupPage() {
                           }
                           className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                           placeholder="Guardian's email"
+                          disabled={isLoading}
                         />
                       </div>
                       <div>
@@ -407,6 +424,7 @@ export default function SignupPage() {
                           }
                           className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                           placeholder="Guardian's phone"
+                          disabled={isLoading}
                         />
                       </div>
                     </div>
@@ -426,7 +444,7 @@ export default function SignupPage() {
                     className="flex-1"
                     disabled={isLoading}
                   >
-                    Continue
+                    {isLoading ? "Processing..." : "Continue"}
                   </Button>
                 </div>
               </div>
@@ -436,7 +454,7 @@ export default function SignupPage() {
           {step === 3 && (
             <div>
               <h2 className="text-2xl font-bold mb-2">Terms & Conditions</h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-rose-600 mb-6">
                 Please review and accept our terms
               </p>
               <div className="space-y-4">
@@ -467,6 +485,7 @@ export default function SignupPage() {
                       updateFormData("agreeTerms", e.target.checked)
                     }
                     className="h-4 w-4 text-rose-600"
+                    disabled={isSubmitting || isLoading}
                   />
                   <label htmlFor="agreeTerms" className="text-sm text-gray-700">
                     I agree to the Terms of Service and Privacy Policy
@@ -476,7 +495,7 @@ export default function SignupPage() {
                   <Button
                     variant="outline"
                     onClick={handleBack}
-                    disabled={isLoading}
+                    disabled={isSubmitting || isLoading}
                   >
                     <FaArrowLeft className="w-4 h-4 mr-2" />
                     Back
@@ -484,9 +503,9 @@ export default function SignupPage() {
                   <Button
                     onClick={handleSubmit}
                     className="flex-1"
-                    disabled={!formData.agreeTerms || isLoading}
+                    disabled={!formData.agreeTerms || isSubmitting || isLoading}
                   >
-                    Register
+                    {isSubmitting || isLoading ? "Registering..." : "Register"}
                   </Button>
                 </div>
               </div>

@@ -12,13 +12,20 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (error) {
       toast.error(error);
+      setIsSubmitting(false);
     }
     if (user) {
-      navigate("/dashboard");
+      navigate(user.hasActiveSubscription ? "/dashboard" : "/subscribe");
+      toast.info(
+        user.hasActiveSubscription
+          ? "Welcome back!"
+          : "Please complete your subscription to continue."
+      );
     }
   }, [error, user, navigate]);
 
@@ -28,11 +35,13 @@ export default function LoginPage() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       await login(formData.email, formData.password);
       toast.success("Login successful!");
     } catch (error: any) {
       toast.error(error.message || "Login failed. Please try again.");
+      setIsSubmitting(false);
     }
   };
 
@@ -70,6 +79,7 @@ export default function LoginPage() {
                 onChange={(e) => updateFormData("email", e.target.value)}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 placeholder="Enter your email"
+                disabled={isSubmitting || isLoading}
               />
             </div>
             <div>
@@ -86,14 +96,15 @@ export default function LoginPage() {
                 onChange={(e) => updateFormData("password", e.target.value)}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 placeholder="Enter your password"
+                disabled={isSubmitting || isLoading}
               />
             </div>
             <Button
               onClick={handleSubmit}
               className="w-full"
-              disabled={isLoading}
+              disabled={isSubmitting || isLoading}
             >
-              Login
+              {isSubmitting || isLoading ? "Logging in..." : "Login"}
             </Button>
             <p className="text-sm text-center text-gray-600">
               Don't have an account?{" "}
