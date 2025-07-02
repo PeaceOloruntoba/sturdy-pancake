@@ -1,6 +1,6 @@
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 import { useAuthStore } from "../store/useAuthStore";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface AdminGuardProps {
   children: ReactNode;
