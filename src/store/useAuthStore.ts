@@ -2,16 +2,18 @@ import { create } from "zustand";
 import api from "../utils/api";
 
 interface User {
-  lookingFor: string;
-  description: string;
-  status: string;
-  age: number;
-  university: string;
-  gender: string;
   id: string;
   email: string;
   firstName: string;
   lastName: string;
+  age: number;
+  gender: string;
+  university: string;
+  status: string;
+  description: string;
+  lookingFor: string;
+  guardianEmail?: string;
+  guardianPhone?: string;
   isAdmin: boolean;
   hasActiveSubscription: boolean;
 }
@@ -43,14 +45,16 @@ export const useAuthStore = create<AuthState>((set) => ({
           email: userData.email,
           firstName: userData.firstName,
           lastName: userData.lastName,
+          age: userData.age,
+          gender: userData.gender,
+          university: userData.university,
+          status: userData.status,
+          description: userData.description,
+          lookingFor: userData.lookingFor,
+          guardianEmail: userData.guardianEmail,
+          guardianPhone: userData.guardianPhone,
           isAdmin: false,
           hasActiveSubscription: false,
-          lookingFor: userData?.lookingFor,
-          description: userData?.description,
-          status: userData?.status,
-          age: userData.age,
-          university: userData?.university,
-          gender: userData?.gender,
         },
         token,
         isLoading: false,
@@ -67,24 +71,40 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await api.post("/auth/login", { email, password });
-      const userData = response.data;
-      const { userId } = response.data;
+      const {
+        token,
+        userId,
+        hasActiveSubscription,
+        firstName,
+        lastName,
+        age,
+        gender,
+        university,
+        status,
+        description,
+        lookingFor,
+        guardianEmail,
+        guardianPhone,
+        isAdmin,
+      } = response.data;
       set({
         user: {
           id: userId,
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          isAdmin: false,
-          hasActiveSubscription: false,
-          lookingFor: userData?.lookingFor,
-          description: userData?.description,
-          status: userData?.status,
-          age: userData.age,
-          university: userData?.university,
-          gender: userData?.gender,
+          email,
+          firstName: firstName || "",
+          lastName: lastName || "",
+          age: age || 18,
+          gender: gender || "",
+          university: university || "",
+          status: status || "",
+          description: description || "",
+          lookingFor: lookingFor || "",
+          guardianEmail: guardianEmail || undefined,
+          guardianPhone: guardianPhone || undefined,
+          isAdmin: isAdmin || false,
+          hasActiveSubscription: hasActiveSubscription || false,
         },
-        token: userData.age,
+        token,
         isLoading: false,
       });
     } catch (error: any) {
