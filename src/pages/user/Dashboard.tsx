@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { FaComments } from "react-icons/fa";
+import { FaComments, FaImage } from "react-icons/fa";
+import { useNavigate } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
-import { toast } from "sonner";
+import { useDashboardStore } from "../../store/useDashboardStore";
 import { Filter } from "bad-words";
+import { toast } from "sonner";
 
 const filter = new Filter();
 
@@ -17,35 +19,18 @@ interface User {
 
 export default function Dashboard() {
   const { user } = useAuthStore();
-  const [users, setUsers] = useState<User[]>([]);
+  const { users, isLoading, fetchUsers, requestPhotoAccess } =
+    useDashboardStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  // Mock data (to be replaced with API call)
   useEffect(() => {
     if (user) {
-      const mockUsers: User[] = [
-        {
-          id: "1",
-          firstName: "Jane",
-          lastName: "Doe",
-          age: 20,
-          gender: "female",
-          lookingFor: "Friendship",
-        },
-        {
-          id: "2",
-          firstName: "Alice",
-          lastName: "Smith",
-          age: 22,
-          gender: "female",
-          lookingFor: "Study Partner",
-        },
-      ].filter((u) => u.gender !== user.gender);
-      setUsers(mockUsers);
+      fetchUsers(user.gender);
     }
-  }, [user]);
+  }, [user, fetchUsers]);
 
   const handleSendMessage = () => {
     if (!message.trim()) {
@@ -53,54 +38,74 @@ export default function Dashboard() {
       return;
     }
     const cleanedMessage = filter.clean(message);
-    toast.success(
-      `Message sent to ${selectedUser?.firstName}: "${cleanedMessage}"`
-    );
+    toast.success(`Message modal opened for ${selectedUser?.firstName}`);
     setMessage("");
     setIsModalOpen(false);
-    // TODO: Send message to backend
+    if (selectedUser) {
+      navigate(
+        `/chats?userId=${selectedUser.id}&initialMessage=${encodeURIComponent(
+          cleanedMessage
+        )}`
+      );
+    }
+  };
+
+  const handleRequestPhoto = async (targetUserId: string) => {
+    await requestPhotoAccess(targetUserId);
   };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn">
       <h2 className="text-2xl font-bold text-gray-900 mb-4">Find Matches</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-rose-600 text-white">
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Age</th>
-              <th className="p-3 text-left">Looking For</th>
-              <th className="p-3 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u) => (
-              <tr
-                key={u.id}
-                className="border-b hover:bg-rose-50 transition-all duration-300"
-              >
-                <td className="p-3">
-                  {u.firstName} {u.lastName}
-                </td>
-                <td className="p-3">{u.age}</td>
-                <td className="p-3">{u.lookingFor}</td>
-                <td className="p-3">
-                  <button
-                    onClick={() => {
-                      setSelectedUser(u);
-                      setIsModalOpen(true);
-                    }}
-                    className="p-2 rounded-full bg-rose-600 text-white hover:bg-rose-700 hover:scale-110 transition-all duration-300"
-                  >
-                    <FaComments className="h-5 w-5" />
-                  </button>
-                </td>
+      {isLoading ? (
+        <div className="text-center">Loading...</div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-rose-600 text-white">
+                <th className="p-3 text-left">Name</th>
+                <th className="p-3 text-left">Age</th>
+                <th className="p-3 text-left">Looking For</th>
+                <th className="p-3 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {users.map((u) => (
+                <tr
+                  key={u.id}
+                  className="border-b hover:bg-rose-50 transition-all duration-300"
+                >
+                  <td className="p-3">
+                    {u.firstName} {u.lastName}
+                  </td>
+                  <td className="p-3">{u.age}</td>
+                  <td className="p-3">{u.lookingFor}</td>
+                  <td className="p-3 flex gap-2">
+                    <button
+                      onClick={() => {
+                        setSelectedUser(u);
+                        setIsModalOpen(true);
+                      }}
+                      className="p-2 rounded-full bg-rose-600 text-white hover:bg-rose-700 hover:scale-110 transition-all duration-300"
+                      title="Message"
+                    >
+                      <FaComments className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={() => handleRequestPhoto(u.id)}
+                      className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 hover:scale-110 transition-all duration-300"
+                      title="Request Photos"
+                    >
+                      <FaImage className="h-5 w-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center animate-fadeIn">
