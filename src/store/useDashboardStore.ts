@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import api from "../api";
+import api from "../utils/api";
 import { toast } from "sonner";
 
 interface User {
