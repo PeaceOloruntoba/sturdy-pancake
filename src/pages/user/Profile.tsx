@@ -18,7 +18,7 @@ interface ProfileData {
 }
 
 export default function Profile() {
-  const { user, token } = useAuthStore();
+  const { user } = useAuthStore();
   const {
     profile,
     photos,
@@ -44,11 +44,11 @@ export default function Profile() {
   const [newPhotos, setNewPhotos] = useState<File[]>([]);
 
   useEffect(() => {
-    if (user && token) {
-      fetchProfile(token);
-      fetchPhotos(token);
+    if (user) {
+      fetchProfile();
+      fetchPhotos();
     }
-  }, [user, token, fetchProfile, fetchPhotos]);
+  }, [user, fetchProfile, fetchPhotos]);
 
   useEffect(() => {
     setFormData({
@@ -96,13 +96,11 @@ export default function Profile() {
       toast.error("All required fields must be provided");
       return;
     }
-    if (token) {
-      await updateProfile(token, formData);
-      for (const photo of newPhotos) {
-        await uploadPhoto(token, photo);
-      }
-      setNewPhotos([]);
+    await updateProfile(formData);
+    for (const photo of newPhotos) {
+      await uploadPhoto(photo);
     }
+    setNewPhotos([]);
     setIsEditing(false);
   };
 
