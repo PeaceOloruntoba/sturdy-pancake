@@ -2,6 +2,7 @@ import { create } from "zustand";
 import api from "../utils/api";
 import { toast } from "sonner";
 import { io, Socket } from "socket.io-client";
+import { useAuthStore } from "./useAuthStore";
 
 interface Chat {
   id: string;
@@ -23,18 +24,19 @@ interface ChatState {
   messages: Message[];
   isLoading: boolean;
   socket: Socket | null;
-  initializeSocket: (userId: string, token: string) => void;
+  initializeSocket: (userId: string) => void;
   fetchChats: () => Promise<void>;
   fetchMessages: (otherUserId: string) => Promise<void>;
   sendMessage: (receiverId: string, content: string) => Promise<void>;
 }
+const { token } = useAuthStore();
 
 export const useChatStore = create<ChatState>((set, get) => ({
   chats: [],
   messages: [],
   isLoading: false,
   socket: null,
-  initializeSocket: (userId: string, token: string) => {
+  initializeSocket: (userId: string) => {
     const socket = io(import.meta.env.VITE_API_URL, {
       auth: { token },
     });

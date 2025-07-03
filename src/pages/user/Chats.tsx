@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FaComments } from "react-icons/fa";
+import { useLocation } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useChatStore } from "../../store/useChatStore";
 import { Filter } from "bad-words";
@@ -22,7 +23,7 @@ interface Message {
 }
 
 export default function Chats() {
-  const { user, token } = useAuthStore();
+  const { user } = useAuthStore();
   const {
     chats,
     messages,
@@ -35,30 +36,44 @@ export default function Chats() {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   useEffect(() => {
-    if (user && token) {
-      initializeSocket(user.id, token);
-      fetchChats(token);
+    if (user) {
+      initializeSocket(user.id);
+      fetchChats();
+      const params = new URLSearchParams(location.search);
+      const userId = params.get("userId");
+      const initialMessage = params.get("initialMessage");
+      if (userId) {
+        const chat = chats.find((c) => c.id === userId);
+        if (chat) {
+          setSelectedChat(chat);
+          if (initialMessage) {
+            setNewMessage(decodeURIComponent(initialMessage));
+            sendMessage(chat.id, decodeURIComponent(initialMessage));
+          }
+        }
+      }
     }
-  }, [user, token, initializeSocket, fetchChats]);
+  }, [user, initializeSocket, fetchChats, location, chats, sendMessage]);
 
   useEffect(() => {
-    if (selectedChat && token) {
-      fetchMessages(token, selectedChat.id);
+    if (selectedChat) {
+      fetchMessages(selectedChat.id);
     }
-  }, [selectedChat, token, fetchMessages]);
+  }, [selectedChat, fetchMessages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !selectedChat || !token || !user) {
+    if (!newMessage.trim() || !selectedChat || !user) {
       return;
     }
     const cleanedMessage = filter.clean(newMessage);
-    await sendMessage(token, selectedChat.id, cleanedMessage);
+    await sendMessage(selectedChat.id, cleanedMessage);
     setNewMessage("");
   };
 
