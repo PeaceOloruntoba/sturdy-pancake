@@ -21,6 +21,7 @@ interface Chat {
 //   receiverId: string;
 //   content: string;
 //   timestamp: string;
+//   status?: "sending" | "sent" | "delivered" | "read";
 // }
 
 export default function Chats() {
@@ -34,6 +35,7 @@ export default function Chats() {
     fetchChats,
     fetchMessages,
     sendMessage,
+    markMessageAsRead,
   } = useChatStore();
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState("");
@@ -69,7 +71,6 @@ export default function Chats() {
             `No existing chat found for user ID: ${targetUserIdFromUrl}.`
           );
         }
-
         navigate(location.pathname, { replace: true });
       }
     }
@@ -83,7 +84,21 @@ export default function Chats() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+
+    if (user && selectedChat) {
+      messages.forEach((msg) => {
+        // Mark as read if the message is received by the current user,
+        // is not already read, and is not a temporary 'sending' message.
+        if (
+          msg.receiverId === user.id &&
+          msg.status !== "read" &&
+          msg.status !== "sending"
+        ) {
+          markMessageAsRead(msg.id, user.id, msg.senderId);
+        }
+      });
+    }
+  }, [messages, user, selectedChat, markMessageAsRead]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedChat || !user) {
@@ -144,8 +159,24 @@ export default function Chats() {
                     }`}
                   >
                     <p>{msg.content}</p>
-                    <p className="text-xs opacity-70">
+                    <p className="text-xs opacity-70 flex items-center gap-1">
                       {new Date(msg.timestamp).toLocaleTimeString()}
+                      {msg.senderId === user?.id && (
+                        <>
+                          {msg.status === "sending" && (
+                            <span className="text-gray-400">✓</span>
+                          )}
+                          {msg.status === "sent" && (
+                            <span className="text-gray-600">✓✓</span>
+                          )}
+                          {msg.status === "delivered" && (
+                            <span className="text-blue-400">✓✓</span>
+                          )}
+                          {msg.status === "read" && (
+                            <span className="text-blue-600">✓✓</span>
+                          )}
+                        </>
+                      )}
                     </p>
                   </div>
                 ))
