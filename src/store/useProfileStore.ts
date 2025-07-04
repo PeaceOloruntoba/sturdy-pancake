@@ -39,7 +39,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
   fetchProfile: async () => {
     set({ isLoading: true });
     try {
-      const response = await api.get("/api/users/profile");
+      const response = await api.get("/users/profile");
       set({ profile: response.data });
     } catch (error) {
       toast.error("Failed to fetch profile");
@@ -51,7 +51,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
   updateProfile: async (data: Partial<ProfileState["profile"]>) => {
     set({ isLoading: true });
     try {
-      const response = await api.post("/api/users/profile", data);
+      const response = await api.post("/users/profile", data);
       set({ profile: response.data });
       toast.success("Profile updated successfully");
     } catch (error) {
@@ -68,7 +68,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
       reader.readAsDataURL(photo);
       await new Promise((resolve) => (reader.onload = resolve));
       const base64Photo = reader.result as string;
-      const response = await api.post("/api/photos", { photo: base64Photo });
+      const response = await api.post("/photos", { photo: base64Photo });
       set((state) => ({
         photos: [
           ...state.photos,
@@ -90,7 +90,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
   fetchPhotos: async () => {
     set({ isLoading: true });
     try {
-      const response = await api.get("/api/photos");
+      const response = await api.get("/photos");
       set({ photos: response.data });
     } catch (error) {
       toast.error("Failed to fetch photos");
