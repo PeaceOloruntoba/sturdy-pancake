@@ -3,6 +3,7 @@ import { FaComments, FaImage } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useDashboardStore } from "../../store/useDashboardStore";
+import { useChatStore } from "../../store/useChatStore";
 import { Filter } from "bad-words";
 import { toast } from "sonner";
 
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const { user } = useAuthStore();
   const { users, isLoading, fetchUsers, requestPhotoAccess } =
     useDashboardStore();
+  const { sendMessage } = useChatStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [message, setMessage] = useState("");
@@ -32,24 +34,25 @@ export default function Dashboard() {
     }
   }, [user, fetchUsers]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!message.trim()) {
       toast.error("Message cannot be empty");
       return;
     }
+    if (!selectedUser) {
+      toast.error("No user selected to send message to.");
+      return;
+    }
+
     const cleanedMessage = filter.clean(message);
-    // This toast message is now more accurate, as it's preparing to navigate to chat
-    toast.success(`Opening chat with ${selectedUser?.firstName}`);
+
+    await sendMessage(selectedUser.id, cleanedMessage);
+
+    toast.success(`Message sent to ${selectedUser.firstName}. Opening chat.`);
     setMessage("");
     setIsModalOpen(false);
-    if (selectedUser) {
-      // Navigate to chats screen with user ID and initial message
-      navigate(
-        `/chats?userId=${selectedUser.id}&initialMessage=${encodeURIComponent(
-          cleanedMessage
-        )}`
-      );
-    }
+
+    navigate(`/chats?userId=${selectedUser.id}`);
   };
 
   const handleRequestPhoto = async (targetUserId: string) => {
