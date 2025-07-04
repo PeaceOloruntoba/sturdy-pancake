@@ -38,10 +38,12 @@ export default function Dashboard() {
       return;
     }
     const cleanedMessage = filter.clean(message);
-    toast.success(`Message modal opened for ${selectedUser?.firstName}`);
+    // This toast message is now more accurate, as it's preparing to navigate to chat
+    toast.success(`Opening chat with ${selectedUser?.firstName}`);
     setMessage("");
     setIsModalOpen(false);
     if (selectedUser) {
+      // Navigate to chats screen with user ID and initial message
       navigate(
         `/chats?userId=${selectedUser.id}&initialMessage=${encodeURIComponent(
           cleanedMessage
@@ -116,6 +118,7 @@ export default function Dashboard() {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-600"
               placeholder="Type your message..."
               rows={4}
