@@ -2,7 +2,7 @@ import { create } from "zustand";
 import api from "../utils/api";
 import { toast } from "sonner";
 import { io, Socket } from "socket.io-client";
-import { useAuthStore } from "./useAuthStore";
+import { useAuthStore } from "./useAuthStore"; // Import useAuthStore
 
 interface Chat {
   id: string;
@@ -29,7 +29,6 @@ interface ChatState {
   fetchMessages: (otherUserId: string) => Promise<void>;
   sendMessage: (receiverId: string, content: string) => Promise<void>;
 }
-const { token } = useAuthStore();
 
 export const useChatStore = create<ChatState>((set, get) => ({
   chats: [],
@@ -37,13 +36,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
   isLoading: false,
   socket: null,
   initializeSocket: (userId: string) => {
+    // Access the token using useAuthStore.getState() inside the function
+    const { token } = useAuthStore.getState();
+
     const socket = io(import.meta.env.VITE_API_URL, {
       auth: { token },
     });
+
     socket.on("connect", () => {
       console.log("Socket connected:", socket.id);
       socket.emit("join", userId);
     });
+
     socket.on("newMessage", (message: Message) => {
       set((state) => ({
         messages: state.messages.some((m) => m.id === message.id)
@@ -51,9 +55,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
           : [...state.messages, message],
       }));
     });
+
     socket.on("disconnect", () => {
       console.log("Socket disconnected");
     });
+
     set({ socket });
   },
   fetchChats: async () => {
