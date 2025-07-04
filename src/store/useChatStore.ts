@@ -70,7 +70,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set((state) => {
         const isDuplicate = state.messages.some((m) => m.id === message.id);
         if (!isDuplicate) {
-          const updatedMessage =
+          const updatedMessage: Message =
             message.senderId === userId
               ? { ...message, status: "delivered" }
               : message;
@@ -160,13 +160,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       set((state) => ({
         messages: state.messages.map((msg) =>
-          msg.id === tempId ? { ...response.data, status: "sent" } : msg
+          msg.id === tempId
+            ? { ...response.data, status: "sent" as "sent" }
+            : msg
         ),
       }));
 
       const socket = get().socket;
       if (socket) {
-        socket.emit("newMessage", { ...response.data, status: "sent" });
+        socket.emit("newMessage", {
+          ...response.data,
+          status: "sent" as "sent",
+        });
       }
       toast.success("Message sent");
     } catch (error) {
@@ -185,7 +190,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       await api.post("/api/chats/messages/read", { messageId, readerId });
       set((state) => ({
         messages: state.messages.map((msg) =>
-          msg.id === messageId ? { ...msg, status: "read" } : msg
+          msg.id === messageId ? { ...msg, status: "read" as "read" } : msg
         ),
       }));
       const socket = get().socket;
