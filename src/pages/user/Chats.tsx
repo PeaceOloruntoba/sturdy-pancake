@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { FaComments } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router"; // Import useNavigate
+import { useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useChatStore } from "../../store/useChatStore";
 import { Filter } from "bad-words";
-import { toast } from "sonner"; // Ensure toast is imported
+import { toast } from "sonner";
 
 const filter = new Filter();
 
 interface Chat {
-  id: string; // Conversation ID
-  user: { id: string; firstName: string; lastName: string }; // Other participant's user ID
+  id: string;
+  user: { id: string; firstName: string; lastName: string };
   lastMessage: string;
   timestamp: string;
 }
@@ -30,7 +30,7 @@ export default function Chats() {
     messages,
     isLoading,
     initializeSocket,
-    disconnectSocket, // Import disconnectSocket
+    disconnectSocket,
     fetchChats,
     fetchMessages,
     sendMessage,
@@ -39,31 +39,26 @@ export default function Chats() {
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const navigate = useNavigate(); // For clearing URL params
+  const navigate = useNavigate();
 
-  // Effect for socket initialization and chat fetching
   useEffect(() => {
     if (user && user.id) {
       initializeSocket(user.id);
       fetchChats();
 
-      // Cleanup function for the socket
       return () => {
         disconnectSocket();
       };
     }
   }, [user, initializeSocket, disconnectSocket, fetchChats]);
 
-  // Effect for handling URL parameters and initial message
   useEffect(() => {
     if (user && chats.length > 0) {
-      // Ensure user is loaded and chats are fetched
       const params = new URLSearchParams(location.search);
       const targetUserIdFromUrl = params.get("userId");
       const initialMessageFromUrl = params.get("initialMessage");
 
       if (targetUserIdFromUrl) {
-        // Find the chat where the 'other user's ID' matches the targetUserIdFromUrl
         const chatToSelect = chats.find(
           (c) => c.user.id === targetUserIdFromUrl
         );
@@ -71,41 +66,30 @@ export default function Chats() {
         if (chatToSelect) {
           setSelectedChat(chatToSelect);
 
-          // If there's an initial message, send it after selecting the chat
-          // and clear the URL parameters to prevent re-sending on subsequent renders
           if (initialMessageFromUrl) {
             const decodedMessage = decodeURIComponent(initialMessageFromUrl);
-            // Use a timeout to ensure the chat is fully rendered and messages are fetched
-            // before attempting to send the initial message.
-            setTimeout(() => {
-              sendMessage(chatToSelect.user.id, decodedMessage); // Send to the other user's ID
-            }, 500); // Small delay
 
-            // Clear the URL parameters after processing the initial message
+            setTimeout(() => {
+              sendMessage(chatToSelect.user.id, decodedMessage);
+            }, 500);
+
             navigate(location.pathname, { replace: true });
           }
         } else {
-          // If no existing chat found, you might want to create a new one
-          // or prompt the user to start a new conversation.
-          // For now, let's just log and don't select a chat.
           console.warn(
             `No existing chat found for user ID: ${targetUserIdFromUrl}.`
           );
-          // Optionally, you could try to create a new chat here if your backend supports it
-          // or redirect back to dashboard.
         }
       }
     }
-  }, [user, chats, location.search, navigate, sendMessage]); // Add sendMessage to dependencies
+  }, [user, chats, location.search, navigate, sendMessage]);
 
-  // Effect for fetching messages for the selected chat
   useEffect(() => {
     if (selectedChat) {
-      fetchMessages(selectedChat.user.id); // Fetch messages for the other participant's ID
+      fetchMessages(selectedChat.user.id);
     }
   }, [selectedChat, fetchMessages]);
 
-  // Effect for scrolling to the bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -116,7 +100,7 @@ export default function Chats() {
       return;
     }
     const cleanedMessage = filter.clean(newMessage);
-    await sendMessage(selectedChat.user.id, cleanedMessage); // Send to the other participant's ID
+    await sendMessage(selectedChat.user.id, cleanedMessage);
     setNewMessage("");
   };
 
@@ -129,7 +113,7 @@ export default function Chats() {
         ) : (
           chats.map((chat) => (
             <div
-              key={chat.id} // This is the conversation ID
+              key={chat.id}
               onClick={() => setSelectedChat(chat)}
               className={`p-3 rounded-lg cursor-pointer hover:bg-rose-600 hover:text-white transition-all duration-300 ${
                 selectedChat?.id === chat.id ? "bg-rose-600 text-white" : ""
