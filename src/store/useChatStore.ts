@@ -2,7 +2,7 @@ import { create } from "zustand";
 import api from "../utils/api";
 import { toast } from "sonner";
 import { io, Socket } from "socket.io-client";
-import { useAuthStore } from "./useAuthStore"; // Import useAuthStore
+// import { useAuthStore } from "./useAuthStore"; // Import useAuthStore
 
 interface Chat {
   id: string;
@@ -37,10 +37,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
   socket: null,
   initializeSocket: (userId: string) => {
     // Access the token using useAuthStore.getState() inside the function
-    const { token } = useAuthStore.getState();
+    // const { token } = useAuthStore.getState(); // Token is not used directly in the io constructor for now
 
     const socket = io(import.meta.env.VITE_API_URL, {
-      auth: { token },
+      // Explicitly define the path for Socket.IO.
+      // This should match the default path where Socket.IO is mounted on the server.
+      path: "/socket.io/",
+      // Removed the auth object as the server is not currently configured to handle it
+      // auth: { token },
     });
 
     socket.on("connect", () => {
@@ -98,6 +102,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }));
       const socket = get().socket;
       if (socket) {
+        // When emitting, ensure you are sending the full message object
+        // as expected by your backend's socket.on("newMessage") listener.
+        // The backend's `sendMessage` route returns the full message object,
+        // so `response.data` is suitable here.
         socket.emit("newMessage", response.data);
       }
       toast.success("Message sent");
