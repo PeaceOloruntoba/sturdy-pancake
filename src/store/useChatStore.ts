@@ -16,6 +16,7 @@ interface Message {
   receiverId: string;
   content: string;
   timestamp: string;
+  status?: "sending" | "sent" | "delivered" | "read";
 }
 
 interface ChatState {
@@ -28,6 +29,11 @@ interface ChatState {
   fetchChats: () => Promise<void>;
   fetchMessages: (otherUserId: string) => Promise<void>;
   sendMessage: (receiverId: string, content: string) => Promise<void>;
+  markMessageAsRead: (
+    messageId: string,
+    readerId: string,
+    senderId: string
+  ) => Promise<void>;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -64,11 +70,24 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set((state) => {
         const isDuplicate = state.messages.some((m) => m.id === message.id);
         if (!isDuplicate) {
-          return { messages: [...state.messages, message] };
+          const updatedMessage =
+            message.senderId === userId
+              ? { ...message, status: "delivered" }
+              : message;
+          return { messages: [...state.messages, updatedMessage] };
         }
         return state;
       });
       get().fetchChats();
+    });
+
+    socket.on("messageRead", ({ messageId, readerId }) => {
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg.id === messageId ? { ...msg, status: "read" } : msg
+        ),
+      }));
+      throw readerId;
     });
 
     socket.on("disconnect", () => {
@@ -112,24 +131,69 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
   sendMessage: async (receiverId: string, content: string) => {
-    set({ isLoading: true });
+    const tempId = Date.now().toString();
+    const senderId = (get().socket as any)?.userId;
+
+    if (!senderId) {
+      toast.error("User not authenticated for sending message.");
+      return;
+    }
+
+    const tempMessage: Message = {
+      id: tempId,
+      senderId: senderId,
+      receiverId: receiverId,
+      content: content,
+      timestamp: new Date().toISOString(),
+      status: "sending",
+    };
+
+    set((state) => ({
+      messages: [...state.messages, tempMessage],
+    }));
+
     try {
       const response = await api.post("/api/chats/messages", {
         receiverId,
         content,
       });
+
       set((state) => ({
-        messages: [...state.messages, response.data],
+        messages: state.messages.map((msg) =>
+          msg.id === tempId ? { ...response.data, status: "sent" } : msg
+        ),
       }));
+
       const socket = get().socket;
       if (socket) {
-        socket.emit("newMessage", response.data);
+        socket.emit("newMessage", { ...response.data, status: "sent" });
       }
       toast.success("Message sent");
     } catch (error) {
+      set((state) => ({
+        messages: state.messages.filter((msg) => msg.id !== tempId),
+      }));
       toast.error("Failed to send message");
-    } finally {
-      set({ isLoading: false });
+    }
+  },
+  markMessageAsRead: async (
+    messageId: string,
+    readerId: string,
+    senderId: string
+  ) => {
+    try {
+      await api.post("/api/chats/messages/read", { messageId, readerId });
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg.id === messageId ? { ...msg, status: "read" } : msg
+        ),
+      }));
+      const socket = get().socket;
+      if (socket) {
+        socket.emit("messageRead", { messageId, readerId, senderId });
+      }
+    } catch (error) {
+      console.error("Failed to mark message as read:", error);
     }
   },
 }));
