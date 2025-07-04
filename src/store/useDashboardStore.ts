@@ -24,7 +24,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   fetchUsers: async (gender: string) => {
     set({ isLoading: true });
     try {
-      const response = await api.get("/users");
+      const response = await api.get("/api/users");
       const filteredUsers = response.data.filter(
         (u: User) => u.gender !== gender
       );
@@ -39,7 +39,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   requestPhotoAccess: async (targetUserId: string) => {
     set({ isLoading: true });
     try {
-      await api.post("/photos/request", { targetUserId });
+      await api.post("/api/photos/request", { targetUserId });
       toast.success("Photo access request sent");
     } catch (error) {
       toast.error("Failed to send photo access request");
