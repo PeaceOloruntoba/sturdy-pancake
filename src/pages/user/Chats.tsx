@@ -56,7 +56,6 @@ export default function Chats() {
     if (user && chats.length > 0) {
       const params = new URLSearchParams(location.search);
       const targetUserIdFromUrl = params.get("userId");
-      const initialMessageFromUrl = params.get("initialMessage");
 
       if (targetUserIdFromUrl) {
         const chatToSelect = chats.find(
@@ -65,24 +64,16 @@ export default function Chats() {
 
         if (chatToSelect) {
           setSelectedChat(chatToSelect);
-
-          if (initialMessageFromUrl) {
-            const decodedMessage = decodeURIComponent(initialMessageFromUrl);
-
-            setTimeout(() => {
-              sendMessage(chatToSelect.user.id, decodedMessage);
-            }, 500);
-
-            navigate(location.pathname, { replace: true });
-          }
         } else {
           console.warn(
             `No existing chat found for user ID: ${targetUserIdFromUrl}.`
           );
         }
+
+        navigate(location.pathname, { replace: true });
       }
     }
-  }, [user, chats, location.search, navigate, sendMessage]);
+  }, [user, chats, location.search, navigate]);
 
   useEffect(() => {
     if (selectedChat) {
