@@ -14,13 +14,13 @@ interface Chat {
   timestamp: string;
 }
 
-interface Message {
-  id: string;
-  senderId: string;
-  receiverId: string;
-  content: string;
-  timestamp: string;
-}
+// interface Message {
+//   id: string;
+//   senderId: string;
+//   receiverId: string;
+//   content: string;
+//   timestamp: string;
+// }
 
 export default function Chats() {
   const { user } = useAuthStore();
