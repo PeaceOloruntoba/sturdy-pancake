@@ -65,7 +65,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   fetchChats: async () => {
     set({ isLoading: true });
     try {
-      const response = await api.get("/api/chats");
+      const response = await api.get("/chats");
       set({ chats: response.data });
     } catch (error) {
       toast.error("Failed to fetch chats");
@@ -77,7 +77,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   fetchMessages: async (otherUserId: string) => {
     set({ isLoading: true });
     try {
-      const response = await api.get(`/api/chats/messages/${otherUserId}`);
+      const response = await api.get(`/chats/messages/${otherUserId}`);
       set({ messages: response.data });
     } catch (error) {
       toast.error("Failed to fetch messages");
@@ -89,7 +89,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   sendMessage: async (receiverId: string, content: string) => {
     set({ isLoading: true });
     try {
-      const response = await api.post("/api/chats/messages", {
+      const response = await api.post("/chats/messages", {
         receiverId,
         content,
       });
