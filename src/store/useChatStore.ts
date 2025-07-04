@@ -77,6 +77,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     socket.on("connect_error", (error) => {
       toast.error("Socket connection failed. Please try again.");
+      throw error;
     });
 
     set({ socket });
