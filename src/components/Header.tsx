@@ -1,7 +1,7 @@
 import { Link } from "react-router";
-import { FaHeart } from "react-icons/fa";
 import { useAuthStore } from "../store/useAuthStore";
 import { Button } from "./Button";
+import logo from "../assets/logo.JPG";
 
 export default function Header() {
   const { user, logout } = useAuthStore();
@@ -10,7 +10,8 @@ export default function Header() {
     <header className="border-b bg-white/80 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
-          <FaHeart className="h-8 w-8 text-rose-600" />
+          {/* <FaHeart className="h-8 w-8 text-rose-600" /> */}
+          <img src={logo} alt="" className="w-12 h-12" />
           <span className="text-2xl font-bold text-gray-900">
             Unistudents Match
           </span>
