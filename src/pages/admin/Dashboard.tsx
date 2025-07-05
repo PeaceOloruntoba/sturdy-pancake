@@ -55,7 +55,7 @@ export default function AdminDashboard() {
     updateProfile,
   } = useAdminStore();
 
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false); // Renamed for clarity
   const [newProfileData, setNewProfileData] = useState<CreateProfileFormData>({
     email: "",
     password: "",
@@ -86,7 +86,8 @@ export default function AdminDashboard() {
     }
   }, [user, navigate, fetchProfiles]);
 
-  const handleInputChange = (
+  const handleCreateInputChange = (
+    // New handler for create form
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
@@ -164,7 +165,7 @@ export default function AdminDashboard() {
         guardianPhoneNumber: "",
         isAdmin: false,
       });
-      setShowCreateForm(false);
+      setShowCreateModal(false); // Close modal on success
     }
   };
 
@@ -197,7 +198,6 @@ export default function AdminDashboard() {
     e.preventDefault();
     if (!selectedProfileForEdit) return;
 
-    // Basic validation for edit form (can be expanded)
     if (
       !selectedProfileForEdit.email ||
       !selectedProfileForEdit.firstName ||
@@ -239,8 +239,8 @@ export default function AdminDashboard() {
     };
 
     if (payload.gender === "Male") {
-      payload.guardianEmail = "";
-      payload.guardianPhoneNumber = "";
+      payload.guardianEmail = '';
+      payload.guardianPhoneNumber = '';
     }
 
     const success = await updateProfile(selectedProfileForEdit.id, payload);
@@ -267,223 +267,11 @@ export default function AdminDashboard() {
 
       <div className="mb-8">
         <button
-          onClick={() => setShowCreateForm(!showCreateForm)}
+          onClick={() => setShowCreateModal(true)} // Open modal
           className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-all shadow-md"
         >
-          {showCreateForm ? "Hide Create Profile Form" : "Create New Profile"}
+          Create New Profile
         </button>
-
-        {showCreateForm && (
-          <div className="mt-6 p-6 border border-gray-200 rounded-lg bg-gray-50 animate-slideInDown">
-            <h3 className="text-xl font-semibold mb-4">
-              Create New User Profile
-            </h3>
-            <form
-              onSubmit={handleCreateProfileSubmit}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
-            >
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Email:
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={newProfileData.email}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Password (Optional):
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={newProfileData.password}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Leave empty for auto-generated password"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  First Name:
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={newProfileData.firstName}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Last Name:
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={newProfileData.lastName}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Age:
-                </label>
-                <input
-                  type="number"
-                  name="age"
-                  value={newProfileData.age}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  University:
-                </label>
-                <input
-                  type="text"
-                  name="university"
-                  value={newProfileData.university}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div className="flex items-center mb-4 col-span-1">
-                <input
-                  type="checkbox"
-                  name="isStudent"
-                  id="isStudent"
-                  checked={newProfileData.isStudent}
-                  onChange={handleInputChange}
-                  className="mr-2 leading-tight"
-                />
-                <label htmlFor="isStudent" className="text-sm">
-                  Student
-                </label>
-              </div>
-              <div className="flex items-center mb-4 col-span-1">
-                <input
-                  type="checkbox"
-                  name="isGraduate"
-                  id="isGraduate"
-                  checked={newProfileData.isGraduate}
-                  onChange={handleInputChange}
-                  className="mr-2 leading-tight"
-                />
-                <label htmlFor="isGraduate" className="text-sm">
-                  Graduate
-                </label>
-              </div>
-              <div className="col-span-2">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Describe Themselves:
-                </label>
-                <textarea
-                  name="description"
-                  value={newProfileData.description}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"
-                  required
-                ></textarea>
-              </div>
-              <div className="col-span-2">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  What They're Looking For:
-                </label>
-                <textarea
-                  name="lookingFor"
-                  value={newProfileData.lookingFor}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"
-                  required
-                ></textarea>
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Gender:
-                </label>
-                <select
-                  name="gender"
-                  value={newProfileData.gender}
-                  onChange={handleInputChange}
-                  className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-              </div>
-              {newProfileData.gender === "Female" && (
-                <>
-                  <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                      Guardian Email:
-                    </label>
-                    <input
-                      type="email"
-                      name="guardianEmail"
-                      value={newProfileData.guardianEmail}
-                      onChange={handleInputChange}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      required={newProfileData.gender === "Female"}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                      Guardian Phone Number:
-                    </label>
-                    <input
-                      type="text"
-                      name="guardianPhoneNumber"
-                      value={newProfileData.guardianPhoneNumber}
-                      onChange={handleInputChange}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      required={newProfileData.gender === "Female"}
-                    />
-                  </div>
-                </>
-              )}
-              <div className="col-span-2 flex items-center mt-4">
-                <input
-                  type="checkbox"
-                  name="isAdmin"
-                  id="isAdmin"
-                  checked={newProfileData.isAdmin}
-                  onChange={handleInputChange}
-                  className="mr-2 h-5 w-5 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="isAdmin"
-                  className="text-gray-700 font-bold text-sm"
-                >
-                  Grant Admin Privileges
-                </label>
-              </div>
-              <div className="col-span-2 flex justify-end mt-4">
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all shadow-md"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Creating..." : "Create Profile"}
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
       </div>
 
       <h3 className="text-xl font-bold mb-4">All User Profiles</h3>
@@ -549,6 +337,229 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* Create Profile Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-white p-8 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-2xl font-bold mb-6 text-rose-700">
+              Create New User Profile
+            </h3>
+            <form
+              onSubmit={handleCreateProfileSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Email:
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={newProfileData.email}
+                  onChange={handleCreateInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Password (Optional):
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={newProfileData.password}
+                  onChange={handleCreateInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Leave empty for auto-generated password"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  First Name:
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={newProfileData.firstName}
+                  onChange={handleCreateInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Last Name:
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={newProfileData.lastName}
+                  onChange={handleCreateInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Age:
+                </label>
+                <input
+                  type="number"
+                  name="age"
+                  value={newProfileData.age}
+                  onChange={handleCreateInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  University:
+                </label>
+                <input
+                  type="text"
+                  name="university"
+                  value={newProfileData.university}
+                  onChange={handleCreateInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
+              <div className="flex items-center mb-4 col-span-1">
+                <input
+                  type="checkbox"
+                  name="isStudent"
+                  id="isStudent"
+                  checked={newProfileData.isStudent}
+                  onChange={handleCreateInputChange}
+                  className="mr-2 leading-tight"
+                />
+                <label htmlFor="isStudent" className="text-sm">
+                  Student
+                </label>
+              </div>
+              <div className="flex items-center mb-4 col-span-1">
+                <input
+                  type="checkbox"
+                  name="isGraduate"
+                  id="isGraduate"
+                  checked={newProfileData.isGraduate}
+                  onChange={handleCreateInputChange}
+                  className="mr-2 leading-tight"
+                />
+                <label htmlFor="isGraduate" className="text-sm">
+                  Graduate
+                </label>
+              </div>
+              <div className="col-span-2">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Describe Themselves:
+                </label>
+                <textarea
+                  name="description"
+                  value={newProfileData.description}
+                  onChange={handleCreateInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"
+                  required
+                ></textarea>
+              </div>
+              <div className="col-span-2">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  What They're Looking For:
+                </label>
+                <textarea
+                  name="lookingFor"
+                  value={newProfileData.lookingFor}
+                  onChange={handleCreateInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"
+                  required
+                ></textarea>
+              </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Gender:
+                </label>
+                <select
+                  name="gender"
+                  value={newProfileData.gender}
+                  onChange={handleCreateInputChange}
+                  className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              {newProfileData.gender === "Female" && (
+                <>
+                  <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Guardian Email:
+                    </label>
+                    <input
+                      type="email"
+                      name="guardianEmail"
+                      value={newProfileData.guardianEmail}
+                      onChange={handleCreateInputChange}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      required={newProfileData.gender === "Female"}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Guardian Phone Number:
+                    </label>
+                    <input
+                      type="text"
+                      name="guardianPhoneNumber"
+                      value={newProfileData.guardianPhoneNumber}
+                      onChange={handleCreateInputChange}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      required={newProfileData.gender === "Female"}
+                    />
+                  </div>
+                </>
+              )}
+              <div className="col-span-2 flex items-center mt-4">
+                <input
+                  type="checkbox"
+                  name="isAdmin"
+                  id="isAdmin"
+                  checked={newProfileData.isAdmin}
+                  onChange={handleCreateInputChange}
+                  className="mr-2 h-5 w-5 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
+                />
+                <label
+                  htmlFor="isAdmin"
+                  className="text-gray-700 font-bold text-sm"
+                >
+                  Grant Admin Privileges
+                </label>
+              </div>
+              <div className="col-span-2 flex justify-end gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)} // Close button
+                  className="px-6 py-3 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all shadow-md"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all shadow-md"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Creating..." : "Create Profile"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Profile Modal */}
       {isEditModalOpen && selectedProfileForEdit && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fadeIn">
           <div className="bg-white p-8 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -571,7 +582,7 @@ export default function AdminDashboard() {
                   onChange={handleEditInputChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   required
-                  disabled // Email usually not editable
+                  disabled
                 />
               </div>
               <div>
@@ -721,7 +732,6 @@ export default function AdminDashboard() {
                   </div>
                 </>
               )}
-              {/* Admin Role Toggle in Edit Modal */}
               <div className="col-span-2 flex items-center mt-4">
                 <input
                   type="checkbox"
