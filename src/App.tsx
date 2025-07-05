@@ -55,6 +55,7 @@ export default function App() {
             }
           />
         </Route>
+        <Route element={<AdminLayout />}></Route>
       </Routes>
       <Toaster richColors />
     </BrowserRouter>
