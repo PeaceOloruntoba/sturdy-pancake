@@ -20,6 +20,9 @@ export default function LoginPage() {
       setIsSubmitting(false);
     }
     if (user) {
+      if (user.isAdmin) {
+        navigate("/admin");
+      }
       navigate(user.hasActiveSubscription ? "/dashboard" : "/subscribe");
       toast.info(
         user.hasActiveSubscription
