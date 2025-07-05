@@ -72,7 +72,7 @@ export default function Dashboard() {
                 <th className="p-3 text-left">Name</th>
                 <th className="p-3 text-left">Age</th>
                 <th className="p-3 text-left">Looking For</th>
-                <th className="p-3 text-left">Actions</th>
+                <th className="p-3 text-left">Message</th>
               </tr>
             </thead>
             <tbody>
