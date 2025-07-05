@@ -18,7 +18,7 @@ export default function AdminSide() {
       <div className="flex flex-col gap-8 animate-slideIn h-full">
         <div>
           <Link
-            to="/dashboard"
+            to="/admin"
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-rose-600 hover:scale-105 transition-all duration-300"
           >
             <FaHome className="h-5 w-5" />

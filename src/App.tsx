@@ -11,6 +11,7 @@ import Chats from "./pages/user/Chats";
 import Profile from "./pages/user/Profile";
 import Dashboard from "./pages/user/Dashboard";
 import AdminLayout from "./layout/AdminLayout";
+import AdminDashboard from "./pages/admin/Dashboard";
 
 export default function App() {
   return (
@@ -51,9 +52,7 @@ export default function App() {
             path="/admin"
             element={
               <AdminGuard>
-                <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn">
-                  Admin Panel (Admin Protected)
-                </div>
+                <AdminDashboard />
               </AdminGuard>
             }
           />
