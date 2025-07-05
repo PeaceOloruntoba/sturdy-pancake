@@ -20,9 +20,11 @@ export default function LoginPage() {
       setIsSubmitting(false);
     }
     if (user) {
-      if (user.isAdmin) {
+      if (user.isAdmin == true) {
         navigate("/admin");
+        return;
       }
+      console.log(user.isAdmin);
       navigate(user.hasActiveSubscription ? "/dashboard" : "/subscribe");
       toast.info(
         user.hasActiveSubscription
