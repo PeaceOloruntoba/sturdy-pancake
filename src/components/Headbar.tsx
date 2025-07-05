@@ -1,6 +1,5 @@
 import { useLocation } from "react-router";
-import { FaHeart } from "react-icons/fa";
-import logo from "../assets/logo.JPG";
+import {logo} from "../assets"
 
 export default function Headbar() {
   const location = useLocation();
