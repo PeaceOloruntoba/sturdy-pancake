@@ -48,7 +48,7 @@ interface AdminState {
   createProfile: (profileData: CreateProfileData) => Promise<boolean>;
 }
 
-export const useAdminStore = create<AdminState>((set, get) => ({
+export const useAdminStore = create<AdminState>((set, _get) => ({
   profiles: [],
   isLoading: false,
   error: null,
