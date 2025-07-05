@@ -17,7 +17,7 @@ interface AdminProfile {
   lookingFor: string;
   gender: "Male" | "Female";
   guardianEmail?: string;
-  guardianPhoneNumber?: string;
+  guardianPhone?: string;
   profilePictureUrl?: string;
   isAdmin: boolean;
   hasActiveSubscription: boolean;
@@ -38,7 +38,7 @@ interface CreateProfileFormData {
   lookingFor: string;
   gender: "Male" | "Female";
   guardianEmail?: string;
-  guardianPhoneNumber?: string;
+  guardianPhone?: string;
   isAdmin: boolean;
 }
 
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
     lookingFor: "",
     gender: "Male",
     guardianEmail: "",
-    guardianPhoneNumber: "",
+    guardianPhone: "",
     isAdmin: false,
   });
 
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
 
     if (
       newProfileData.gender === "Female" &&
-      (!newProfileData.guardianEmail || !newProfileData.guardianPhoneNumber)
+      (!newProfileData.guardianEmail || !newProfileData.guardianPhone)
     ) {
       toast.error("Female profiles require guardian email and phone number.");
       return;
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
 
     if (payload.gender === "Male") {
       delete payload.guardianEmail;
-      delete payload.guardianPhoneNumber;
+      delete payload.guardianPhone;
     }
 
     if (!payload.password) {
@@ -162,7 +162,7 @@ export default function AdminDashboard() {
         lookingFor: "",
         gender: "Male",
         guardianEmail: "",
-        guardianPhoneNumber: "",
+        guardianPhone: "",
         isAdmin: false,
       });
       setShowCreateModal(false); // Close modal on success
@@ -215,7 +215,7 @@ export default function AdminDashboard() {
     if (
       selectedProfileForEdit.gender === "Female" &&
       (!selectedProfileForEdit.guardianEmail ||
-        !selectedProfileForEdit.guardianPhoneNumber)
+        !selectedProfileForEdit.guardianPhone)
     ) {
       toast.error("Female profiles require guardian email and phone number.");
       return;
@@ -240,7 +240,7 @@ export default function AdminDashboard() {
 
     if (payload.gender === "Male") {
       payload.guardianEmail = '';
-      payload.guardianPhoneNumber = '';
+      payload.guardianPhone = '';
     }
 
     const success = await updateProfile(selectedProfileForEdit.id, payload);
@@ -513,8 +513,8 @@ export default function AdminDashboard() {
                     </label>
                     <input
                       type="text"
-                      name="guardianPhoneNumber"
-                      value={newProfileData.guardianPhoneNumber}
+                      name="guardianPhone"
+                      value={newProfileData.guardianPhone}
                       onChange={handleCreateInputChange}
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       required={newProfileData.gender === "Female"}
@@ -723,8 +723,8 @@ export default function AdminDashboard() {
                     </label>
                     <input
                       type="text"
-                      name="guardianPhoneNumber"
-                      value={selectedProfileForEdit.guardianPhoneNumber || ""}
+                      name="guardianPhone"
+                      value={selectedProfileForEdit.guardianPhone || ""}
                       onChange={handleEditInputChange}
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       required={selectedProfileForEdit.gender === "Female"}

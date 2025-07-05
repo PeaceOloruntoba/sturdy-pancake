@@ -15,7 +15,7 @@ interface AdminProfile {
   lookingFor: string;
   gender: "Male" | "Female";
   guardianEmail?: string;
-  guardianPhoneNumber?: string;
+  guardianPhone?: string;
   profilePictureUrl?: string;
   isAdmin: boolean;
   hasActiveSubscription: boolean;
@@ -36,7 +36,7 @@ interface CreateProfileData {
   lookingFor: string;
   gender: "Male" | "Female";
   guardianEmail?: string;
-  guardianPhoneNumber?: string;
+  guardianPhone?: string;
   isAdmin: boolean;
 }
 
@@ -52,7 +52,7 @@ interface UpdateProfileData {
   lookingFor?: string;
   gender?: "Male" | "Female";
   guardianEmail?: string | null; // Allow null to clear if needed
-  guardianPhoneNumber?: string | null; // Allow null to clear if needed
+  guardianPhone?: string | null; // Allow null to clear if needed
   isAdmin?: boolean;
   hasActiveSubscription?: boolean;
   // Add other updatable fields as needed
