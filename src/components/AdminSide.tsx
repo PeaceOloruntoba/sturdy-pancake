@@ -15,14 +15,16 @@ export default function AdminSide() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 p-6 text-white w-full">
-      <div className="flex flex-col gap-4 animate-slideIn justify-between">
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-3 p-3 rounded-lg hover:bg-rose-600 hover:scale-105 transition-all duration-300"
-        >
-          <FaHome className="h-5 w-5" />
-          <span>Dashboard</span>
-        </Link>
+      <div className="flex flex-col gap-8 animate-slideIn h-full">
+        <div>
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-rose-600 hover:scale-105 transition-all duration-300"
+          >
+            <FaHome className="h-5 w-5" />
+            <span>Dashboard</span>
+          </Link>
+        </div>
         <div className="flex flex-col gap-4">
           <button
             onClick={handleLogout}
