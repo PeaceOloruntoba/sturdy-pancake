@@ -17,7 +17,7 @@ interface AdminProfile {
   guardianEmail?: string;
   guardianPhoneNumber?: string;
   profilePictureUrl?: string;
-  isAdmin: boolean; // Added isAdmin to the profile interface
+  isAdmin: boolean;
   hasActiveSubscription: boolean;
   createdAt: string;
   updatedAt: string;
@@ -37,7 +37,25 @@ interface CreateProfileData {
   gender: "Male" | "Female";
   guardianEmail?: string;
   guardianPhoneNumber?: string;
-  isAdmin: boolean; // Added isAdmin for creation
+  isAdmin: boolean;
+}
+
+// Data structure for updating a profile
+interface UpdateProfileData {
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  university?: string;
+  isStudent?: boolean;
+  isGraduate?: boolean;
+  description?: string;
+  lookingFor?: string;
+  gender?: "Male" | "Female";
+  guardianEmail?: string | null; // Allow null to clear if needed
+  guardianPhoneNumber?: string | null; // Allow null to clear if needed
+  isAdmin?: boolean;
+  hasActiveSubscription?: boolean;
+  // Add other updatable fields as needed
 }
 
 interface AdminState {
@@ -46,6 +64,10 @@ interface AdminState {
   error: string | null;
   fetchProfiles: () => Promise<void>;
   createProfile: (profileData: CreateProfileData) => Promise<boolean>;
+  updateProfile: (
+    profileId: string,
+    profileData: UpdateProfileData
+  ) => Promise<boolean>; // New action
 }
 
 export const useAdminStore = create<AdminState>((set, _get) => ({
@@ -79,6 +101,30 @@ export const useAdminStore = create<AdminState>((set, _get) => ({
     } catch (err: any) {
       const errorMessage =
         err.response?.data?.message || "Failed to create profile.";
+      set({ error: errorMessage, isLoading: false });
+      toast.error(errorMessage);
+      return false;
+    }
+  },
+
+  updateProfile: async (profileId: string, profileData: UpdateProfileData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await api.put(
+        `/api/admin/profiles/${profileId}`,
+        profileData
+      );
+      set((state) => ({
+        profiles: state.profiles.map((p) =>
+          p.id === profileId ? { ...p, ...response.data } : p
+        ),
+        isLoading: false,
+      }));
+      toast.success("Profile updated successfully!");
+      return true;
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message || "Failed to update profile.";
       set({ error: errorMessage, isLoading: false });
       toast.error(errorMessage);
       return false;
