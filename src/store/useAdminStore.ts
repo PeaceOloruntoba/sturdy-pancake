@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import api from "../utils/api";
 import { toast } from "sonner";
 
@@ -40,7 +41,6 @@ interface CreateProfileData {
   isAdmin: boolean;
 }
 
-// Data structure for updating a profile
 interface UpdateProfileData {
   firstName?: string;
   lastName?: string;
@@ -51,11 +51,10 @@ interface UpdateProfileData {
   description?: string;
   lookingFor?: string;
   gender?: "Male" | "Female";
-  guardianEmail?: string | null; // Allow null to clear if needed
-  guardianPhone?: string | null; // Allow null to clear if needed
+  guardianEmail?: string | null;
+  guardianPhone?: string | null;
   isAdmin?: boolean;
   hasActiveSubscription?: boolean;
-  // Add other updatable fields as needed
 }
 
 interface AdminState {
@@ -67,67 +66,78 @@ interface AdminState {
   updateProfile: (
     profileId: string,
     profileData: UpdateProfileData
-  ) => Promise<boolean>; // New action
+  ) => Promise<boolean>;
 }
 
-export const useAdminStore = create<AdminState>((set, _get) => ({
-  profiles: [],
-  isLoading: false,
-  error: null,
-
-  fetchProfiles: async () => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await api.get("/api/admin/profiles");
-      set({ profiles: response.data, isLoading: false });
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message || "Failed to fetch profiles.";
-      set({ error: errorMessage, isLoading: false });
-      toast.error(errorMessage);
+export const useAdminStore = create<AdminState>()(
+  persist(
+    (set, _get) => ({
+      profiles: [],
+      isLoading: false,
+      error: null,
+      fetchProfiles: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await api.get("/api/admin/profiles");
+          set({ profiles: response.data, isLoading: false });
+        } catch (err: any) {
+          const errorMessage =
+            err.response?.data?.message || "Failed to fetch profiles.";
+          set({ error: errorMessage, isLoading: false });
+          toast.error(errorMessage);
+        }
+      },
+      createProfile: async (profileData: CreateProfileData) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await api.post("/api/admin/profiles", profileData);
+          set((state) => ({
+            profiles: [...state.profiles, response.data],
+            isLoading: false,
+          }));
+          toast.success("Profile created successfully!");
+          return true;
+        } catch (err: any) {
+          const errorMessage =
+            err.response?.data?.message || "Failed to create profile.";
+          set({ error: errorMessage, isLoading: false });
+          toast.error(errorMessage);
+          return false;
+        }
+      },
+      updateProfile: async (
+        profileId: string,
+        profileData: UpdateProfileData
+      ) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await api.put(
+            `/api/admin/profiles/${profileId}`,
+            profileData
+          );
+          set((state) => ({
+            profiles: state.profiles.map((p) =>
+              p.id === profileId ? { ...p, ...response.data } : p
+            ),
+            isLoading: false,
+          }));
+          toast.success("Profile updated successfully!");
+          return true;
+        } catch (err: any) {
+          const errorMessage =
+            err.response?.data?.message || "Failed to update profile.";
+          set({ error: errorMessage, isLoading: false });
+          toast.error(errorMessage);
+          return false;
+        }
+      },
+    }),
+    {
+      name: "admin-storage",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        profiles: state.profiles,
+      }),
     }
-  },
-
-  createProfile: async (profileData: CreateProfileData) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await api.post("/api/admin/profiles", profileData);
-      set((state) => ({
-        profiles: [...state.profiles, response.data],
-        isLoading: false,
-      }));
-      toast.success("Profile created successfully!");
-      return true;
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message || "Failed to create profile.";
-      set({ error: errorMessage, isLoading: false });
-      toast.error(errorMessage);
-      return false;
-    }
-  },
-
-  updateProfile: async (profileId: string, profileData: UpdateProfileData) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await api.put(
-        `/api/admin/profiles/${profileId}`,
-        profileData
-      );
-      set((state) => ({
-        profiles: state.profiles.map((p) =>
-          p.id === profileId ? { ...p, ...response.data } : p
-        ),
-        isLoading: false,
-      }));
-      toast.success("Profile updated successfully!");
-      return true;
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message || "Failed to update profile.";
-      set({ error: errorMessage, isLoading: false });
-      toast.error(errorMessage);
-      return false;
-    }
-  },
-}));
+  )
+);
