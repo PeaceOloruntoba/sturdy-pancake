@@ -10,6 +10,7 @@ import MainLayout from "./layout/MainLayout";
 import Chats from "./pages/user/Chats";
 import Profile from "./pages/user/Profile";
 import Dashboard from "./pages/user/Dashboard";
+import AdminLayout from "./layout/AdminLayout";
 
 export default function App() {
   return (
@@ -44,6 +45,8 @@ export default function App() {
               </UserGuard>
             }
           />
+        </Route>
+        <Route element={<AdminLayout />}>
           <Route
             path="/admin"
             element={
@@ -55,7 +58,6 @@ export default function App() {
             }
           />
         </Route>
-        <Route element={<AdminLayout />}></Route>
       </Routes>
       <Toaster richColors />
     </BrowserRouter>
