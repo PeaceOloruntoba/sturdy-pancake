@@ -1,5 +1,6 @@
 import { useLocation } from "react-router";
 import { FaHeart } from "react-icons/fa";
+import logo from "../assets/logo.JPG";
 
 export default function Headbar() {
   const location = useLocation();
@@ -11,7 +12,7 @@ export default function Headbar() {
   return (
     <div className="flex items-center justify-between p-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-lg">
       <div className="flex items-center space-x-2 animate-fadeIn">
-        <FaHeart className="h-6 w-6 text-white" />
+        <img src={logo} alt="" className="w-12 h-12" />
         <span className="text-lg font-bold">
           Unistudents Match / {pageName}
         </span>
