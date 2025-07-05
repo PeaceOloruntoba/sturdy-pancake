@@ -1,5 +1,7 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import api from "../utils/api";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -9,13 +11,16 @@ interface User {
   age: number;
   gender: string;
   university: string;
-  status: string;
+  isStudent: boolean;
+  isGraduate: boolean;
   description: string;
   lookingFor: string;
   guardianEmail?: string;
   guardianPhone?: string;
   isAdmin: boolean;
   hasActiveSubscription: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface AuthState {
@@ -23,106 +28,119 @@ interface AuthState {
   token: string | null;
   isLoading: boolean;
   error: string | null;
+  initializeAuth: () => void;
   register: (userData: any) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   setSubscriptionStatus: (status: boolean) => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
-  isLoading: false,
-  error: null,
-  register: async (userData) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await api.post("/api/auth/register", userData);
-      const { token, userId } = response.data;
-      set({
-        user: {
-          id: userId,
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          age: userData.age,
-          gender: userData.gender,
-          university: userData.university,
-          status: userData.status,
-          description: userData.description,
-          lookingFor: userData.lookingFor,
-          guardianEmail: userData.guardianEmail,
-          guardianPhone: userData.guardianPhone,
-          isAdmin: false,
-          hasActiveSubscription: false,
-        },
-        token,
-        isLoading: false,
-      });
-    } catch (error: any) {
-      set({
-        error: error.response?.data?.error?.message || "Registration failed",
-        isLoading: false,
-      });
-      throw error;
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      token: null,
+      isLoading: false,
+      error: null,
+
+      initializeAuth: () => {
+        const { token } = get();
+        if (token) {
+          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        }
+      },
+
+      register: async (userData) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await api.post("/api/auth/register", userData);
+          const { token, userId, ...restUserData } = response.data;
+
+          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+          set({
+            user: {
+              id: userId,
+              email: userData.email,
+              ...restUserData,
+              isStudent: userData.isStudent,
+              isGraduate: userData.isGraduate,
+              isAdmin: restUserData.isAdmin || false,
+            },
+            token,
+            isLoading: false,
+          });
+          toast.success("Registration successful!");
+        } catch (error: any) {
+          set({
+            error:
+              error.response?.data?.error?.message || "Registration failed",
+            isLoading: false,
+          });
+          toast.error(
+            error.response?.data?.error?.message || "Registration failed"
+          );
+          throw error;
+        }
+      },
+
+      login: async (email, password) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await api.post("/api/auth/login", {
+            email,
+            password,
+          });
+          const { token, userId, ...userData } = response.data;
+
+          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+          set({
+            user: {
+              id: userId,
+              email,
+              ...userData,
+            },
+            token,
+            isLoading: false,
+          });
+          toast.success("Logged in successfully!");
+        } catch (error: any) {
+          set({
+            error: error.response?.data?.error?.message || "Login failed",
+            isLoading: false,
+          });
+          toast.error(error.response?.data?.error?.message || "Login failed");
+          throw error;
+        }
+      },
+
+      logout: () => {
+        delete api.defaults.headers.common["Authorization"];
+        set({ user: null, token: null, isLoading: false, error: null });
+        toast.info("Logged out successfully.");
+      },
+
+      setSubscriptionStatus: (status: boolean) => {
+        set((state) => ({
+          user: state.user
+            ? { ...state.user, hasActiveSubscription: status }
+            : null,
+        }));
+      },
+    }),
+    {
+      name: "auth-storage",
+      storage: createJSONStorage(() => localStorage),
+      partialize: ({ user, token }) => ({ user, token }),
+      version: 1,
+      onRehydrateStorage: (state) => {
+        if (state && state.token) {
+          api.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${state.token}`;
+        }
+      },
     }
-  },
-  login: async (email, password) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await api.post("/api/auth/login", { email, password });
-      const {
-        token,
-        userId,
-        hasActiveSubscription,
-        firstName,
-        lastName,
-        age,
-        gender,
-        university,
-        status,
-        description,
-        lookingFor,
-        guardianEmail,
-        guardianPhone,
-        isAdmin,
-      } = response.data;
-      set({
-        user: {
-          id: userId,
-          email,
-          firstName: firstName || "",
-          lastName: lastName || "",
-          age: age || 18,
-          gender: gender || "",
-          university: university || "",
-          status: status || "",
-          description: description || "",
-          lookingFor: lookingFor || "",
-          guardianEmail: guardianEmail || undefined,
-          guardianPhone: guardianPhone || undefined,
-          isAdmin: isAdmin || false,
-          hasActiveSubscription: hasActiveSubscription || false,
-        },
-        token,
-        isLoading: false,
-      });
-    } catch (error: any) {
-      set({
-        error: error.response?.data?.error?.message || "Login failed",
-        isLoading: false,
-      });
-      throw error;
-    }
-  },
-  logout: () => {
-    set({ user: null, token: null, isLoading: false, error: null });
-  },
-  setSubscriptionStatus: (status: boolean) => {
-    set((state) => ({
-      user: state.user
-        ? { ...state.user, hasActiveSubscription: status }
-        : null,
-    }));
-  },
-}));
+  )
+);
