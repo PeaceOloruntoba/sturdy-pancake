@@ -1,5 +1,5 @@
 import { useLocation } from "react-router";
-import {logo} from "../assets"
+import {logo} from "../assets/index.ts"
 
 export default function Headbar() {
   const location = useLocation();
