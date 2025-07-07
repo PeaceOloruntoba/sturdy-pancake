@@ -79,7 +79,7 @@ export default function SubscribePage() {
                 setIsSubmitting(false);
               }}
             />
-            <Button
+            <Button className="flex items-center"
               variant="outline"
               onClick={() => navigate("/")}
               disabled={isSubmitting || isLoading}
