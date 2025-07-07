@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import api from "../utils/api";
 import { toast } from "sonner";
 
@@ -28,6 +28,7 @@ interface AuthState {
   token: string | null;
   isLoading: boolean;
   error: string | null;
+  stripePublishableKey: string | null;
   initializeAuth: () => void;
   register: (userData: any) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
@@ -42,6 +43,7 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isLoading: false,
       error: null,
+      stripePublishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || null,
 
       initializeAuth: () => {
         const { token } = get();
@@ -131,8 +133,12 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => localStorage),
-      partialize: ({ user, token }) => ({ user, token }),
+      storage: createJSONStorage(() => localStorage) as StateStorage,
+      partialize: ({ user, token, stripePublishableKey }) => ({
+        user,
+        token,
+        stripePublishableKey,
+      }),
       version: 1,
       onRehydrateStorage: (state) => {
         if (state && state.token) {

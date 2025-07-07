@@ -14,9 +14,18 @@ import AdminLayout from "./layout/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import { useEffect } from "react";
 import { useAuthStore } from "./store/useAuthStore";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 export default function App() {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
+  const stripePublishableKey = useAuthStore(
+    (state) => state.stripePublishableKey
+  );
+
+  const stripePromise = stripePublishableKey
+    ? loadStripe(stripePublishableKey)
+    : null;
 
   useEffect(() => {
     initializeAuth();
@@ -24,48 +33,96 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/subscribe" element={<SubscribePage />} />
-        <Route element={<MainLayout />}>
-          <Route
-            path="/dashboard"
-            element={
-              <UserGuard>
-                <Dashboard />
-              </UserGuard>
-            }
-          />
-          <Route
-            path="/chats"
-            element={
-              <UserGuard>
-                <Chats />
-              </UserGuard>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <UserGuard>
-                <Profile />
-              </UserGuard>
-            }
-          />
-        </Route>
-        <Route element={<AdminLayout />}>
-          <Route
-            path="/admin"
-            element={
-              <AdminGuard>
-                <AdminDashboard />
-              </AdminGuard>
-            }
-          />
-        </Route>
-      </Routes>
+      {stripePromise ? (
+        <Elements stripe={stripePromise}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/subscribe" element={<SubscribePage />} />
+            <Route element={<MainLayout />}>
+              <Route
+                path="/dashboard"
+                element={
+                  <UserGuard>
+                    <Dashboard />
+                  </UserGuard>
+                }
+              />
+              <Route
+                path="/chats"
+                element={
+                  <UserGuard>
+                    <Chats />
+                  </UserGuard>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <UserGuard>
+                    <Profile />
+                  </UserGuard>
+                }
+              />
+            </Route>
+            <Route element={<AdminLayout />}>
+              <Route
+                path="/admin"
+                element={
+                  <AdminGuard>
+                    <AdminDashboard />
+                  </AdminGuard>
+                }
+              />
+            </Route>
+          </Routes>
+        </Elements>
+      ) : (
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          {/* Render SubscribePage without Stripe if key is missing, though it won't work */}
+          <Route path="/subscribe" element={<SubscribePage />} />
+          <Route element={<MainLayout />}>
+            <Route
+              path="/dashboard"
+              element={
+                <UserGuard>
+                  <Dashboard />
+                </UserGuard>
+              }
+            />
+            <Route
+              path="/chats"
+              element={
+                <UserGuard>
+                  <Chats />
+                </UserGuard>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <UserGuard>
+                  <Profile />
+                </UserGuard>
+              }
+            />
+          </Route>
+          <Route element={<AdminLayout />}>
+            <Route
+              path="/admin"
+              element={
+                <AdminGuard>
+                  <AdminDashboard />
+                </AdminGuard>
+              }
+            />
+          </Route>
+        </Routes>
+      )}
       <Toaster richColors />
     </BrowserRouter>
   );
