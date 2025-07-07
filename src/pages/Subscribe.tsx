@@ -48,7 +48,7 @@ export default function SubscribePage() {
         payload.stripePaymentMethodId = paymentId;
       }
 
-      const response = await api.post("/auth/subscribe", payload, {
+      await api.post("/auth/subscribe", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSubscriptionStatus(true);
@@ -58,7 +58,6 @@ export default function SubscribePage() {
         }!`
       );
       navigate("/dashboard");
-      throw response;
     } catch (error: any) {
       toast.error(error.message || "Subscription failed. Please try again.");
       setIsSubmitting(false);
@@ -154,7 +153,6 @@ export default function SubscribePage() {
                     );
                     throw new Error("PayPal plan ID missing.");
                   }
-
                   try {
                     return PAYPAL_PLAN_ID;
                   } catch (error) {
@@ -165,10 +163,15 @@ export default function SubscribePage() {
                   }
                 }}
                 onApprove={async (data, _actions) => {
-                  await handleSubscriptionSuccess(
-                    data.subscriptionID,
-                    "paypal"
-                  );
+                  if (data.subscriptionID) {
+                    await handleSubscriptionSuccess(
+                      data.subscriptionID,
+                      "paypal"
+                    );
+                  } else {
+                    toast.error("PayPal subscription ID not received.");
+                    setIsSubmitting(false);
+                  }
                 }}
                 onError={(err) => {
                   console.error("PayPal Error:", err);
