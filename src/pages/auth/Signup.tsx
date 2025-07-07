@@ -433,6 +433,7 @@ export default function SignupPage() {
                 <div className="flex space-x-4">
                   <Button
                     variant="outline"
+                    className="flex items-center"
                     onClick={handleBack}
                     disabled={isLoading}
                   >
@@ -494,6 +495,7 @@ export default function SignupPage() {
                 <div className="flex space-x-4">
                   <Button
                     variant="outline"
+                    className="flex items-center"
                     onClick={handleBack}
                     disabled={isSubmitting || isLoading}
                   >
