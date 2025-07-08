@@ -71,7 +71,7 @@ export default function Dashboard() {
               <tr className="bg-rose-600 text-white">
                 <th className="p-3 text-left">Name</th>
                 <th className="p-3 text-left">Age</th>
-                <th className="p-3 text-left">Looking For</th>
+                {/* <th className="p-3 text-left">Looking For</th> */}
                 <th className="p-3 text-left">Message</th>
               </tr>
             </thead>
@@ -85,7 +85,7 @@ export default function Dashboard() {
                     {u.firstName} {u.lastName}
                   </td>
                   <td className="p-3">{u.age}</td>
-                  <td className="p-3">{u.lookingFor}</td>
+                  {/* <td className="p-3">{u.lookingFor}</td> */}
                   <td className="p-3 flex gap-2">
                     <button
                       onClick={() => {

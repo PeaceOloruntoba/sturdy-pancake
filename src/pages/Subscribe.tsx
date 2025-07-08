@@ -19,8 +19,6 @@ export default function SubscribePage() {
   const stripe = useStripe();
   const elements = useElements();
 
-  const PAYPAL_PLAN_ID = import.meta.env.VITE_PAYPAL_PLAN_ID;
-
   useEffect(() => {
     if (!user || !token) {
       navigate("/login");
@@ -147,18 +145,24 @@ export default function SubscribePage() {
                 style={{ layout: "vertical" }}
                 disabled={isSubmitting || isLoading}
                 createSubscription={async (_data, _actions) => {
-                  if (!PAYPAL_PLAN_ID) {
-                    toast.error(
-                      "PayPal plan ID is not configured in environment variables."
-                    );
-                    throw new Error("PayPal plan ID missing.");
-                  }
                   try {
-                    return PAYPAL_PLAN_ID;
-                  } catch (error) {
-                    toast.error(
-                      "Failed to initiate PayPal subscription. Please try again."
+                    const response = await api.post(
+                      "/api/auth/subscribe", // This hits your backend to create PayPal subscription
+                      { paymentProcessor: "paypal" },
+                      { headers: { Authorization: `Bearer ${token}` } }
                     );
+
+                    if (!response.data || !response.data.subscriptionId) {
+                      toast.error(
+                        "Failed to get PayPal subscription ID from server."
+                      );
+                      throw new Error("No PayPal subscription ID returned");
+                    }
+
+                    return response.data.subscriptionId; // 👈 Pass this to PayPal SDK
+                  } catch (error: any) {
+                    console.error("PayPal createSubscription error:", error);
+                    toast.error("Failed to initiate PayPal subscription.");
                     throw error;
                   }
                 }}
