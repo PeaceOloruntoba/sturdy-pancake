@@ -17,13 +17,17 @@ import Footer from "../components/Footer";
 
 // Online image URLs for the carousel and sections
 const heroImageCarouselUrls = [
-  "https://placehold.co/1920x1080/e0f2f7/4a90e2?text=Muslim+Couple+1", // Placeholder for first hero image (larger for background)
-  "https://placehold.co/1920x1080/d0e9f0/367c9c?text=Muslim+Couple+2", // Placeholder for second hero image
-  "https://placehold.co/1920x1080/c0e0e7/2a6a8a?text=Muslim+Couple+3", // Added a third image for more variety
+  "https://placehold.co/1920x1080/e0f2f7/4a90e2?text=Muslim+Couple+Praying", // Religious theme
+  "https://placehold.co/1920x1080/d0e9f0/367c9c?text=Islamic+Wedding+Ceremony", // Religious theme
+  "https://placehold.co/1920x1080/c0e0e7/2a6a8a?text=Muslim+Family+Joy", // Family theme
+  "https://placehold.co/1920x1080/b0d7e0/1f5e7a?text=Quran+and+Ring", // Symbolic religious item
+  "https://placehold.co/1920x1080/a0cfe7/1a4a5e?text=Islamic+Architecture", // Aesthetic religious imagery
 ];
 
 const helpSectionImageUrl =
   "https://placehold.co/800x600/f8f9fa/6c757d?text=Muslim+Woman+Smiling"; // Placeholder for help section image
+const pricingSectionBgImageUrl =
+  "https://placehold.co/1920x1080/f0f8ff/4682b4?text=Islamic+Geometric+Pattern"; // Background for pricing section
 
 export default function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -50,7 +54,7 @@ export default function HomePage() {
         }}
       >
         {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="absolute inset-0 bg-black/70 bg-opacity-50"></div>
 
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
           {/* Text Content */}
@@ -133,8 +137,7 @@ export default function HomePage() {
 
             {/* Timeline Item 1 (Left) */}
             <div className="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
-              <div className="order-1 w-5/12 md:w-5/12"></div>{" "}
-              {/* Empty div for spacing on the right on desktop */}
+              <div className="order-1 w-5/12 md:w-5/12"></div>
               <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
                 <h1 className="mx-auto font-semibold text-lg text-white">1</h1>
               </div>
@@ -152,8 +155,7 @@ export default function HomePage() {
 
             {/* Timeline Item 2 (Right) */}
             <div className="mb-8 flex justify-between items-center w-full right-timeline">
-              <div className="order-1 w-5/12 md:w-5/12"></div>{" "}
-              {/* Empty div for spacing on the left on desktop */}
+              <div className="order-1 w-5/12 md:w-5/12"></div>
               <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
                 <h1 className="mx-auto font-semibold text-lg text-white">2</h1>
               </div>
@@ -259,17 +261,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section className="py-16 px-4 bg-white">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900">
+      {/* Pricing Section with Background Image */}
+      <section
+        className="relative py-16 px-4 bg-cover bg-center"
+        style={{ backgroundImage: `url(${pricingSectionBgImageUrl})` }}
+      >
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 bg-black/70 bg-opacity-60"></div>{" "}
+        {/* Darker overlay for readability */}
+        <div className="container mx-auto text-center relative z-10 text-white">
+          {" "}
+          {/* Text color changed to white */}
+          <h2 className="text-3xl md:text-4xl font-bold mb-8">
             Simple, Transparent Pricing
           </h2>
-          <div className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
-            <h3 className="text-2xl font-bold mb-2 text-gray-800">
-              Premium Membership
-            </h3>
-            <p className="text-gray-600 mb-4">
+          <div className="max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-lg rounded-xl p-6 transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl text-gray-900">
+            {" "}
+            {/* Card background adjusted for transparency */}
+            <h3 className="text-2xl font-bold mb-2">Premium Membership</h3>
+            <p className="text-gray-700 mb-4">
               Everything you need to find your spouse
             </p>
             <div className="text-5xl font-extrabold mb-2 text-rose-700">
