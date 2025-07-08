@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { FaHome, FaComments, FaUser, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaHome,
+  FaComments,
+  FaUser,
+  FaSignOutAlt,
+  FaShareAlt,
+} from "react-icons/fa";
 import { useAuthStore } from "../store/useAuthStore";
 import { toast } from "sonner";
 import ShareModal from "./ShareModal";
@@ -55,11 +61,11 @@ export default function Sidebar() {
           onClick={toggleShareModal}
           className="flex items-center gap-3 p-3 rounded-lg bg-gray-700 hover:bg-gray-600 hover:scale-105 transition-all duration-300 text-left"
         >
+          <FaShareAlt className="h-5 w-5" />
           <span>Share</span>
         </button>
       </div>
 
-      {/* Share Modal */}
       <ShareModal isOpen={isShareModalOpen} onClose={toggleShareModal} />
     </div>
   );
