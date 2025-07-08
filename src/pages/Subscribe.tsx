@@ -46,7 +46,7 @@ export default function SubscribePage() {
         payload.stripePaymentMethodId = paymentId;
       }
 
-      await api.post("/auth/subscribe", payload, {
+      await api.post("/api/auth/subscribe", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSubscriptionStatus(true);
