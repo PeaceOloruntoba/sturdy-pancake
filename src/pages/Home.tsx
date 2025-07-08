@@ -89,7 +89,7 @@ export default function HomePage() {
           backgroundImage: `url(${heroImageCarouselUrls[currentImageIndex]})`,
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="absolute inset-0 bg-black/70 bg-opacity-50"></div>
 
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
           <div className="text-center md:text-left md:w-full z-10 animate-fade-in-up text-white">
@@ -306,7 +306,7 @@ export default function HomePage() {
         }`}
         style={{ backgroundImage: `url(${pricingSectionBgImageUrl})` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+        <div className="absolute inset-0 bg-black/70 bg-opacity-60"></div>
         <div className="container mx-auto text-center relative z-10 text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-8">
             Simple, Transparent Pricing
