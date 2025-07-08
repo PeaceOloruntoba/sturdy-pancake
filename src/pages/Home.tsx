@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import {
   FaShieldAlt,
@@ -15,29 +15,66 @@ import { Button } from "../components/Button";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-// Online image URLs for the carousel and sections
 const heroImageCarouselUrls = [
-  "https://placehold.co/1920x1080/e0f2f7/4a90e2?text=Muslim+Couple+Praying", // Religious theme
-  "https://placehold.co/1920x1080/d0e9f0/367c9c?text=Islamic+Wedding+Ceremony", // Religious theme
-  "https://placehold.co/1920x1080/c0e0e7/2a6a8a?text=Muslim+Family+Joy", // Family theme
-  "https://placehold.co/1920x1080/b0d7e0/1f5e7a?text=Quran+and+Ring", // Symbolic religious item
-  "https://placehold.co/1920x1080/a0cfe7/1a4a5e?text=Islamic+Architecture", // Aesthetic religious imagery
+  "https://placehold.co/1920x1080/e0f2f7/4a90e2?text=Muslim+Couple+Praying",
+  "https://placehold.co/1920x1080/d0e9f0/367c9c?text=Islamic+Wedding+Ceremony",
+  "https://placehold.co/1920x1080/c0e0e7/2a6a8a?text=Muslim+Family+Joy",
+  "https://placehold.co/1920x1080/b0d7e0/1f5e7a?text=Quran+and+Ring",
+  "https://placehold.co/1920x1080/a0cfe7/1a4a5e?text=Islamic+Architecture",
 ];
 
 const helpSectionImageUrl =
-  "https://placehold.co/800x600/f8f9fa/6c757d?text=Muslim+Woman+Smiling"; // Placeholder for help section image
+  "https://placehold.co/800x600/f8f9fa/6c757d?text=Muslim+Woman+Smiling";
 const pricingSectionBgImageUrl =
-  "https://placehold.co/1920x1080/f0f8ff/4682b4?text=Islamic+Geometric+Pattern"; // Background for pricing section
+  "https://placehold.co/1920x1080/f0f8ff/4682b4?text=Islamic+Geometric+Pattern";
+
+const useScrollAnimation = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.2,
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+
+  return [ref, isVisible] as const;
+};
 
 export default function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const [helpRef, helpVisible] = useScrollAnimation();
+  const [howItWorksRef, howItWorksVisible] = useScrollAnimation();
+  const [whyChooseUsRef, whyChooseUsVisible] = useScrollAnimation();
+  const [pricingRef, pricingVisible] = useScrollAnimation();
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(
         (prevIndex) => (prevIndex + 1) % heroImageCarouselUrls.length
       );
-    }, 4000); // Change image every 4 seconds
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
@@ -93,10 +130,15 @@ export default function HomePage() {
       </section>
 
       {/* We're here to help you section */}
-      <section className="py-16 px-4 bg-white">
+      <section
+        ref={helpRef}
+        className={`py-16 px-4 bg-white transition-opacity duration-1000 ease-out transform ${
+          helpVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
           {/* Image for help section */}
-          <div className="md:w-1/2 flex justify-center animate-fade-in-left">
+          <div className="md:w-1/2 flex justify-center">
             <img
               src={helpSectionImageUrl}
               alt="A Muslim woman smiling, representing support"
@@ -104,7 +146,7 @@ export default function HomePage() {
             />
           </div>
           {/* Text content for help section */}
-          <div className="text-center md:text-left md:w-1/2 animate-fade-in-right">
+          <div className="text-center md:text-left md:w-1/2">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               We're here to help you
             </h2>
@@ -123,7 +165,14 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section (Vertical Timeline Layout) */}
-      <section className="py-16 px-4 bg-gray-100">
+      <section
+        ref={howItWorksRef}
+        className={`py-16 px-4 bg-gray-100 transition-opacity duration-1000 ease-out transform ${
+          howItWorksVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">
             How Unistudents Match Works
@@ -141,7 +190,7 @@ export default function HomePage() {
               <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
                 <h1 className="mx-auto font-semibold text-lg text-white">1</h1>
               </div>
-              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left animate-fade-in-left">
+              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left">
                 <FaUserPlus className="h-10 w-10 text-rose-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                   1. Register & Verify
@@ -159,7 +208,7 @@ export default function HomePage() {
               <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
                 <h1 className="mx-auto font-semibold text-lg text-white">2</h1>
               </div>
-              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left animate-fade-in-right">
+              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left">
                 <FaEdit className="h-10 w-10 text-rose-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                   2. Build Your Profile
@@ -177,7 +226,7 @@ export default function HomePage() {
               <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
                 <h1 className="mx-auto font-semibold text-lg text-white">3</h1>
               </div>
-              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left animate-fade-in-left">
+              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left">
                 <FaComments className="h-10 w-10 text-rose-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                   3. Connect & Communicate
@@ -195,7 +244,7 @@ export default function HomePage() {
               <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
                 <h1 className="mx-auto font-semibold text-lg text-white">4</h1>
               </div>
-              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left animate-fade-in-right">
+              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left">
                 <FaRing className="h-10 w-10 text-rose-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                   4. Towards Nikah
@@ -211,7 +260,14 @@ export default function HomePage() {
       </section>
 
       {/* Why Choose Unistudents Match Section */}
-      <section className="py-16 px-4 bg-gray-50">
+      <section
+        ref={whyChooseUsRef}
+        className={`py-16 px-4 bg-gray-50 transition-opacity duration-1000 ease-out transform ${
+          whyChooseUsVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">
             Why Choose Unistudents Match for Your Nikah?
@@ -263,21 +319,21 @@ export default function HomePage() {
 
       {/* Pricing Section with Background Image */}
       <section
-        className="relative py-16 px-4 bg-cover bg-center"
+        ref={pricingRef}
+        className={`relative py-16 px-4 bg-cover bg-center transition-opacity duration-1000 ease-out transform ${
+          pricingVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
         style={{ backgroundImage: `url(${pricingSectionBgImageUrl})` }}
       >
         {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-black/70 bg-opacity-60"></div>{" "}
-        {/* Darker overlay for readability */}
+        <div className="absolute inset-0 bg-black/70 bg-opacity-60"></div>
         <div className="container mx-auto text-center relative z-10 text-white">
-          {" "}
-          {/* Text color changed to white */}
           <h2 className="text-3xl md:text-4xl font-bold mb-8">
             Simple, Transparent Pricing
           </h2>
           <div className="max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-lg rounded-xl p-6 transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl text-gray-900">
-            {" "}
-            {/* Card background adjusted for transparency */}
             <h3 className="text-2xl font-bold mb-2">Premium Membership</h3>
             <p className="text-gray-700 mb-4">
               Everything you need to find your spouse
