@@ -1,16 +1,23 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { FaHome, FaComments, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useAuthStore } from "../store/useAuthStore";
 import { toast } from "sonner";
+import ShareModal from "./ShareModal";
 
 export default function Sidebar() {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     toast.success("Logged out successfully!");
     navigate("/login");
+  };
+
+  const toggleShareModal = () => {
+    setIsShareModalOpen(!isShareModalOpen);
   };
 
   return (
@@ -44,10 +51,16 @@ export default function Sidebar() {
           <FaSignOutAlt className="h-5 w-5" />
           <span>Logout</span>
         </button>
-        <button className="flex items-center gap-3 p-3 rounded-lg bg-gray-700 hover:bg-gray-600 hover:scale-105 transition-all duration-300 text-left">
+        <button
+          onClick={toggleShareModal}
+          className="flex items-center gap-3 p-3 rounded-lg bg-gray-700 hover:bg-gray-600 hover:scale-105 transition-all duration-300 text-left"
+        >
           <span>Share</span>
         </button>
       </div>
+
+      {/* Share Modal */}
+      <ShareModal isOpen={isShareModalOpen} onClose={toggleShareModal} />
     </div>
   );
 }
