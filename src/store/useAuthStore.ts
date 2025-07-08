@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import api from "../utils/api";
 import { toast } from "sonner";
 
@@ -133,11 +133,11 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => localStorage) as StateStorage,
-      partialize: ({ user, token, stripePublishableKey }) => ({
-        user,
-        token,
-        stripePublishableKey,
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        ...state,
+        isLoading: false,
+        error: null,
       }),
       version: 1,
       onRehydrateStorage: (state) => {
