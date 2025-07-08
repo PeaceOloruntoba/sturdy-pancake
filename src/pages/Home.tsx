@@ -17,10 +17,10 @@ import Footer from "../components/Footer";
 
 const heroImageCarouselUrls = [
   "https://placehold.co/1920x1080/e0f2f7/4a90e2?text=Muslim+Couple+Praying",
-  "https://placehold.co/1920x1080/d0e9f0/367c9c?text=Islamic+Wedding+Ceremony",
+  "https://placehold.co/1920x1080/d0e9f0/3637e080-11bf-4306-b0ae-679926155c83", // Changed to image_375c21.jpg
   "https://placehold.co/1920x1080/c0e0e7/2a6a8a?text=Muslim+Family+Joy",
   "https://placehold.co/1920x1080/b0d7e0/1f5e7a?text=Quran+and+Ring",
-  "https://placehold.co/1920x1080/a0cfe7/1a4a5e?text=Islamic+Architecture",
+  "https://placehold.co/1920x1080/a0cfe7/077a66cd-8e29-4a4d-8be8-a95133ac0137", // Changed to image_3766cb.jpg
 ];
 
 const helpSectionImageUrl =
@@ -83,18 +83,15 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 font-inter">
       <Header />
 
-      {/* Hero Section: Animated Background Image Carousel */}
       <section
         className="relative py-20 px-4 overflow-hidden md:py-32 bg-cover bg-center transition-all duration-1000 ease-in-out"
         style={{
           backgroundImage: `url(${heroImageCarouselUrls[currentImageIndex]})`,
         }}
       >
-        {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-black/70 bg-opacity-50"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
-          {/* Text Content */}
           <div className="text-center md:text-left md:w-full z-10 animate-fade-in-up text-white">
             <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
               Believe In Your Happy Ever After...
@@ -129,7 +126,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* We're here to help you section */}
       <section
         ref={helpRef}
         className={`py-16 px-4 bg-white transition-opacity duration-1000 ease-out transform ${
@@ -137,7 +133,6 @@ export default function HomePage() {
         }`}
       >
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-          {/* Image for help section */}
           <div className="md:w-1/2 flex justify-center">
             <img
               src={helpSectionImageUrl}
@@ -145,7 +140,6 @@ export default function HomePage() {
               className="rounded-3xl shadow-lg w-full max-w-sm md:max-w-md h-auto object-cover"
             />
           </div>
-          {/* Text content for help section */}
           <div className="text-center md:text-left md:w-1/2">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               We're here to help you
@@ -164,7 +158,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works Section (Vertical Timeline Layout) */}
       <section
         ref={howItWorksRef}
         className={`py-16 px-4 bg-gray-100 transition-opacity duration-1000 ease-out transform ${
@@ -178,19 +171,13 @@ export default function HomePage() {
             How Unistudents Match Works
           </h2>
           <div className="relative wrap overflow-hidden p-10 h-full">
-            {/* Vertical line */}
-            <div
-              className="border-2-2 absolute border-opacity-20 border-rose-600 h-full border"
-              style={{ left: "50%" }}
-            ></div>
+            <div className="absolute border-opacity-20 border-rose-600 h-full border-l-2 left-5 md:left-1/2 md:transform md:-translate-x-1/2"></div>
 
-            {/* Timeline Item 1 (Left) */}
-            <div className="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
-              <div className="order-1 w-5/12 md:w-5/12"></div>
-              <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
+            <div className="mb-8 flex items-center w-full relative md:justify-between md:flex-row-reverse">
+              <div className="z-20 flex items-center bg-rose-600 shadow-xl w-8 h-8 rounded-full absolute left-5 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
                 <h1 className="mx-auto font-semibold text-lg text-white">1</h1>
               </div>
-              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left">
+              <div className="bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left ml-14 md:ml-0 md:mr-auto">
                 <FaUserPlus className="h-10 w-10 text-rose-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                   1. Register & Verify
@@ -202,13 +189,11 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Timeline Item 2 (Right) */}
-            <div className="mb-8 flex justify-between items-center w-full right-timeline">
-              <div className="order-1 w-5/12 md:w-5/12"></div>
-              <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
+            <div className="mb-8 flex items-center w-full relative md:justify-between md:flex-row">
+              <div className="z-20 flex items-center bg-rose-600 shadow-xl w-8 h-8 rounded-full absolute left-5 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
                 <h1 className="mx-auto font-semibold text-lg text-white">2</h1>
               </div>
-              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left">
+              <div className="bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left ml-14 md:ml-0 md:ml-auto">
                 <FaEdit className="h-10 w-10 text-rose-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                   2. Build Your Profile
@@ -220,13 +205,11 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Timeline Item 3 (Left) */}
-            <div className="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
-              <div className="order-1 w-5/12 md:w-5/12"></div>
-              <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
+            <div className="mb-8 flex items-center w-full relative md:justify-between md:flex-row-reverse">
+              <div className="z-20 flex items-center bg-rose-600 shadow-xl w-8 h-8 rounded-full absolute left-5 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
                 <h1 className="mx-auto font-semibold text-lg text-white">3</h1>
               </div>
-              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left">
+              <div className="bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left ml-14 md:ml-0 md:mr-auto">
                 <FaComments className="h-10 w-10 text-rose-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                   3. Connect & Communicate
@@ -238,13 +221,11 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Timeline Item 4 (Right) */}
-            <div className="mb-8 flex justify-between items-center w-full right-timeline">
-              <div className="order-1 w-5/12 md:w-5/12"></div>
-              <div className="z-20 flex items-center order-1 bg-rose-600 shadow-xl w-8 h-8 rounded-full">
+            <div className="mb-8 flex items-center w-full relative md:justify-between md:flex-row">
+              <div className="z-20 flex items-center bg-rose-600 shadow-xl w-8 h-8 rounded-full absolute left-5 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
                 <h1 className="mx-auto font-semibold text-lg text-white">4</h1>
               </div>
-              <div className="order-1 bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left">
+              <div className="bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left ml-14 md:ml-0 md:ml-auto">
                 <FaRing className="h-10 w-10 text-rose-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                   4. Towards Nikah
@@ -259,7 +240,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Why Choose Unistudents Match Section */}
       <section
         ref={whyChooseUsRef}
         className={`py-16 px-4 bg-gray-50 transition-opacity duration-1000 ease-out transform ${
@@ -317,7 +297,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing Section with Background Image */}
       <section
         ref={pricingRef}
         className={`relative py-16 px-4 bg-cover bg-center transition-opacity duration-1000 ease-out transform ${
@@ -327,8 +306,7 @@ export default function HomePage() {
         }`}
         style={{ backgroundImage: `url(${pricingSectionBgImageUrl})` }}
       >
-        {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-black/70 bg-opacity-60"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
         <div className="container mx-auto text-center relative z-10 text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-8">
             Simple, Transparent Pricing
