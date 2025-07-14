@@ -46,9 +46,15 @@ export default function SubscribePage() {
         payload.stripePaymentMethodId = paymentId;
       }
 
-      await api.post("/api/auth/subscribe", payload, {
+      const response = await api.post("/api/auth/subscribe", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      if (processor === "paypal" && response.data.approvalUrl) {
+        window.location.href = response.data.approvalUrl; // 👈 Redirect to PayPal
+        return;
+      }
+
       setSubscriptionStatus(true);
       toast.success(
         `Subscription successful via ${
