@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { useAuthStore } from "./store/useAuthStore";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import SubscribeSuccessPage from "./pages/SubscribeSuccess";
 
 export default function App() {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
@@ -40,7 +41,7 @@ export default function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/subscribe" element={<SubscribePage />} />
-            <Route path="/subscribe/success" element={<SubscribePage />} />
+            <Route path="/subscribe/success" element={<SubscribeSuccessPage />} />
             <Route element={<MainLayout />}>
               <Route
                 path="/dashboard"
@@ -86,7 +87,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           {/* Render SubscribePage without Stripe if key is missing, though it won't work */}
           <Route path="/subscribe" element={<SubscribePage />} />
-          <Route path="/subscribe/success" element={<SubscribePage />} />
+          <Route path="/subscribe/success" element={<SubscribeSuccessPage />} />
           <Route element={<MainLayout />}>
             <Route
               path="/dashboard"
