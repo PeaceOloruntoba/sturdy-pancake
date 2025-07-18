@@ -6,7 +6,7 @@ import App from "./App.tsx";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-const id = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+// const id = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY!);
 
 
