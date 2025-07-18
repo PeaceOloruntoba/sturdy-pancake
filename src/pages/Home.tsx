@@ -16,20 +16,22 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const heroImageCarouselUrls = [
-  "https://placehold.co/1920x1080/e0f2f7/4a90e2?text=Muslim+Couple+Praying",
-  "https://placehold.co/1920x1080/d0e9f0/3637e080-11bf-4306-b0ae-679926155c83", // Changed to image_375c21.jpg
-  "https://placehold.co/1920x1080/c0e0e7/2a6a8a?text=Muslim+Family+Joy",
-  "https://placehold.co/1920x1080/b0d7e0/1f5e7a?text=Quran+and+Ring",
-  "https://placehold.co/1920x1080/a0cfe7/077a66cd-8e29-4a4d-8be8-a95133ac0137", // Changed to image_3766cb.jpg
+  "https://images.unsplash.com/photo-1596700888252-c0e62f0f8f1c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Muslim couple praying
+  "https://images.unsplash.com/photo-1629815039209-661d4b6b2b7b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Muslim students studying
+  "https://images.unsplash.com/photo-1629815039209-661d4b6b2b7b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Muslim family joy (using a similar image for variety)
+  "https://images.unsplash.com/photo-1607990281513-ad91746e16f7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Quran and ring (symbolic)
+  "https://images.unsplash.com/photo-1607990283405-c4917a1d1d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Another student-focused image
 ];
 
 const helpSectionImageUrl =
-  "https://placehold.co/800x600/f8f9fa/6c757d?text=Muslim+Woman+Smiling";
-const pricingSectionBgImageUrl =
-  "https://placehold.co/1920x1080/f0f8ff/4682b4?text=Islamic+Geometric+Pattern";
+  "https://images.unsplash.com/photo-1616893630453-6a5b9b9b9b9b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; // Muslim woman smiling
 
-const useScrollAnimation = () => {
-  const ref = useRef<HTMLDivElement>(null);
+const pricingSectionBgImageUrl =
+  "https://images.unsplash.com/photo-1621931818788-3d8b8b8b8b8b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; // Islamic geometric pattern (abstract)
+
+const useScrollAnimation = (): [React.RefObject<HTMLDivElement | null>, boolean] => {
+  // Changed HTMLElement to HTMLDivElement for specificity
+  const ref = useRef<HTMLDivElement>(null); // Changed HTMLElement to HTMLDivElement
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const useScrollAnimation = () => {
     };
   }, []);
 
-  return [ref, isVisible] as const;
+  return [ref, isVisible];
 };
 
 export default function HomePage() {
