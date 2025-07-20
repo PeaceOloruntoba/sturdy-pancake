@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../store/useAuthStore";
-import { usePhotoStore } from "../store/usePhotoStore";
+import { useAuthStore } from "../../store/useAuthStore";
+import { usePhotoStore } from "../../store/usePhotoStore";
 import { toast } from "sonner";
 import { FaImage, FaLock, FaUnlock, FaHourglassHalf, FaTimesCircle, FaTimes } from "react-icons/fa"; // Added FaTimes for close button
 

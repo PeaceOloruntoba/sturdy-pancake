@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { usePhotoStore } from "../store/usePhotoStore";
+import { usePhotoStore } from "../../store/usePhotoStore";
 import { FaUpload, FaTrash, FaEye, FaTimes, FaCheck } from "react-icons/fa";
 import { toast } from "sonner";
 import UserProfileDetail from "./UserProfileDetail"; // Import the detailed profile component

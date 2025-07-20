@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaComments, FaImage, FaTimes } from "react-icons/fa"; // Added FaTimes for close button
-import { useNavigate } from "react-router-dom"; // Use react-router-dom
+import { useNavigate } from "react-router"; // Use react-router-dom
 import { useAuthStore } from "../../store/useAuthStore";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import { useChatStore } from "../../store/useChatStore";
