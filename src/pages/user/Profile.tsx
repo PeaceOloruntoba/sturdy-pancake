@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaEdit, FaImage } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useProfileStore } from "../../store/useProfileStore";
 import { toast } from "sonner";
@@ -21,7 +21,6 @@ export default function Profile() {
   const { user } = useAuthStore();
   const {
     profile,
-    photos,
     isLoading,
     fetchProfile,
     updateProfile,
@@ -74,11 +73,6 @@ export default function Profile() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setNewPhotos([...newPhotos, ...Array.from(e.target.files)]);
-    }
-  };
 
   const handleSubmit = async () => {
     if (
