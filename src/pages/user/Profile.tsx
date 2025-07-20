@@ -259,44 +259,6 @@ export default function Profile() {
               rows={4}
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Photos
-            </label>
-            <div className="mt-1 flex items-center gap-2">
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handlePhotoChange}
-                disabled={!isEditing}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-rose-600 file:text-white file:hover:bg-rose-700"
-              />
-              <FaImage className="h-6 w-6 text-rose-600" />
-            </div>
-            {(photos.length > 0 || newPhotos.length > 0) && (
-              <div className="mt-2 flex flex-wrap gap-2">
-                {photos.map((photo) => (
-                  <div key={photo.id} className="relative">
-                    <img
-                      src={photo.url}
-                      alt="Uploaded"
-                      className="h-20 w-20 object-cover rounded-lg"
-                    />
-                  </div>
-                ))}
-                {newPhotos.map((photo, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={URL.createObjectURL(photo)}
-                      alt={`New ${index}`}
-                      className="h-20 w-20 object-cover rounded-lg"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
           <div className="flex justify-end gap-2">
             <button
               onClick={() => setIsEditing(!isEditing)}
