@@ -7,6 +7,7 @@ import {
   FaSignOutAlt,
   FaShareAlt,
 } from "react-icons/fa";
+import { TbPhoto } from "react-icons/tb";
 import { useAuthStore } from "../store/useAuthStore";
 import { toast } from "sonner";
 import ShareModal from "./ShareModal";
@@ -54,7 +55,7 @@ export default function Sidebar() {
           to="/photos"
           className="flex items-center gap-3 p-3 rounded-lg hover:bg-rose-600 hover:scale-105 transition-all duration-300"
         >
-          <FaUser className="h-5 w-5" />
+          <TbPhoto  className="h-5 w-5" />
           <span>Photos</span>
         </Link>
         <button
