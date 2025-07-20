@@ -9,6 +9,7 @@ import SubscribePage from "./pages/Subscribe";
 import MainLayout from "./layout/MainLayout";
 import Chats from "./pages/user/Chats";
 import Profile from "./pages/user/Profile";
+import PhotosPage from "./pages/user/Photos";
 import Dashboard from "./pages/user/Dashboard";
 import AdminLayout from "./layout/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -67,6 +68,14 @@ export default function App() {
                   </UserGuard>
                 }
               />
+            <Route
+              path="/photos"
+              element={
+                <UserGuard>
+                  <PhotosPage />
+                </UserGuard>
+              }
+            />
             </Route>
             <Route element={<AdminLayout />}>
               <Route
@@ -110,6 +119,14 @@ export default function App() {
               element={
                 <UserGuard>
                   <Profile />
+                </UserGuard>
+              }
+            />
+            <Route
+              path="/photos"
+              element={
+                <UserGuard>
+                  <PhotosPage />
                 </UserGuard>
               }
             />
