@@ -42,7 +42,10 @@ export default function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/subscribe" element={<SubscribePage />} />
-            <Route path="/subscribe/success" element={<SubscribeSuccessPage />} />
+            <Route
+              path="/subscribe/success"
+              element={<SubscribeSuccessPage />}
+            />
             <Route element={<MainLayout />}>
               <Route
                 path="/dashboard"
@@ -68,14 +71,14 @@ export default function App() {
                   </UserGuard>
                 }
               />
-            <Route
-              path="/photos"
-              element={
-                <UserGuard>
-                  <PhotosPage />
-                </UserGuard>
-              }
-            />
+              <Route
+                path="/photos"
+                element={
+                  <UserGuard>
+                    <PhotosPage />
+                  </UserGuard>
+                }
+              />
             </Route>
             <Route element={<AdminLayout />}>
               <Route
