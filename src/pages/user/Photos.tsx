@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { usePhotoStore } from "../store/usePhotoStore";
 import { FaUpload, FaTrash, FaEye, FaTimes, FaCheck } from "react-icons/fa";
 import { toast } from "sonner";
+import UserProfileDetail from "./UserProfileDetail"; // Import the detailed profile component
 
 export default function PhotosPage() {
   const {
@@ -17,6 +18,8 @@ export default function PhotosPage() {
     respondToPhotoRequest,
   } = usePhotoStore();
   const [newPhoto, setNewPhoto] = useState<File | null>(null);
+  const [isProfileDetailOpen, setIsProfileDetailOpen] = useState(false);
+  const [selectedUserForDetail, setSelectedUserForDetail] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPhotos();
@@ -27,7 +30,7 @@ export default function PhotosPage() {
   const handlePhotoUpload = async () => {
     if (newPhoto) {
       await uploadPhoto(newPhoto);
-      setNewPhoto(null);
+      setNewPhoto(null); // Clear the selected file
     } else {
       toast.error("Please select a photo to upload.");
     }
@@ -43,8 +46,18 @@ export default function PhotosPage() {
     await respondToPhotoRequest(requestId, status);
   };
 
+  const openProfileDetailModal = (userId: string) => {
+    setSelectedUserForDetail(userId);
+    setIsProfileDetailOpen(true);
+  };
+
+  const closeProfileDetailModal = () => {
+    setIsProfileDetailOpen(false);
+    setSelectedUserForDetail(null);
+  };
+
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn max-w-4xl mx-auto">
+    <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn max-w-4xl mx-auto relative"> {/* Added relative for modal positioning */}
       <h2 className="text-3xl font-bold text-gray-900 mb-6">Your Photos & Requests</h2>
 
       {isLoading && <div className="text-center text-lg">Loading...</div>}
@@ -173,9 +186,7 @@ export default function PhotosPage() {
                 </div>
                 {request.status === "accepted" && (
                   <button
-                
-                
-                    onClick={() => toast.info("Viewing photos of " + request.targetUserId.firstName)}
+                    onClick={() => openProfileDetailModal(request.targetUserId._id)}
                     className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors ml-4"
                     title="View Photos"
                   >
@@ -187,6 +198,21 @@ export default function PhotosPage() {
           </ul>
         )}
       </section>
+
+      {/* Profile Detail Sliding Modal (for viewing accepted requests) */}
+      {isProfileDetailOpen && selectedUserForDetail && (
+        <div className={`fixed inset-0 z-40 overflow-hidden`}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeProfileDetailModal}></div>
+          <div className={`fixed right-0 top-0 h-full w-full md:w-1/2 lg:w-1/3 bg-white shadow-xl transform transition-transform duration-300 ease-out ${isProfileDetailOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div className="p-6 h-full overflow-y-auto">
+              <button onClick={closeProfileDetailModal} className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl">
+                <FaTimes />
+              </button>
+              <UserProfileDetail userId={selectedUserForDetail} onClose={closeProfileDetailModal} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
