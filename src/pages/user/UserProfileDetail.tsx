@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { usePhotoStore } from "../../store/usePhotoStore";
 import { toast } from "sonner";
-import { FaImage, FaLock, FaUnlock, FaHourglassHalf, FaTimesCircle, FaTimes } from "react-icons/fa"; // Added FaTimes for close button
+import { FaImage, FaLock, FaUnlock, FaHourglassHalf, FaTimesCircle, FaTimes, FaComments } from "react-icons/fa"; // Added FaTimes for close button
+import { useNavigate } from "react-router";
 
 interface ProfileWithPhotos {
   _id: string;
@@ -24,6 +25,7 @@ interface UserProfileDetailProps {
 }
 
 export default function UserProfileDetail({ userId, onClose }: UserProfileDetailProps) {
+  const navigate = useNavigate();
   const { user: currentUser } = useAuthStore(); // Authenticated user
   const { isLoading, error, fetchUserProfileWithPhotos, sendPhotoRequest, fetchSentRequests, sentRequests } = usePhotoStore();
 
@@ -68,10 +70,10 @@ export default function UserProfileDetail({ userId, onClose }: UserProfileDetail
   const getPhotoRequestButtonState = () => {
     if (!profileData) return { text: "Loading...", disabled: true };
 
-    const isSelf = currentUser?.userId === profileData._id;
-    if (isSelf) {
-      return { text: "Manage Your Photos", disabled: false, link: "/photos", icon: <FaImage className="mr-2" /> };
-    }
+    // const isSelf = currentUser?.userId === profileData._id;
+    // if (isSelf) {
+    //   return { text: "Manage Your Photos", disabled: false, link: "/photos", icon: <FaImage className="mr-2" /> };
+    // }
 
     // Check if a request has been sent by the current user to this target user
     const sentRequestStatus = sentRequests.find(
@@ -96,7 +98,7 @@ export default function UserProfileDetail({ userId, onClose }: UserProfileDetail
     }
   };
 
-  const { text: buttonText, disabled: buttonDisabled, link: buttonLink, icon: buttonIcon } = getPhotoRequestButtonState();
+  const { text: buttonText, disabled: buttonDisabled, icon: buttonIcon } = getPhotoRequestButtonState();
 
   if (isLoading && !profileData) {
     return <div className="p-6 text-center text-lg">Loading profile...</div>;
