@@ -16,7 +16,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const heroImageCarouselUrls = [
-  "https://images.unsplash.com/photo-1596700888252-c0e62f0f8f1c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Muslim couple praying
+  "https://tse2.mm.bing.net/th/id/OIP.KSMEguBxtFIZ0V8Chk8qOAHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Muslim couple praying
   "https://images.unsplash.com/photo-1629815039209-661d4b6b2b7b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Muslim students studying
   "https://images.unsplash.com/photo-1629815039209-661d4b6b2b7b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Muslim family joy (using a similar image for variety)
   "https://images.unsplash.com/photo-1607990281513-ad91746e16f7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Quran and ring (symbolic)
@@ -27,7 +27,7 @@ const helpSectionImageUrl =
   "https://image.freepik.com/free-photo/portrait-pretty-smiling-muslim-woman-background_23-2148188735.jpg"; // Muslim woman smiling
 
 const pricingSectionBgImageUrl =
-  "https://images.unsplash.com/photo-1621931818788-3d8b8b8b8b8b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; // Islamic geometric pattern (abstract)
+  "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"; // Islamic geometric pattern (abstract)
 
 const useScrollAnimation = (): [React.RefObject<HTMLDivElement | null>, boolean] => {
   // Changed HTMLElement to HTMLDivElement for specificity
