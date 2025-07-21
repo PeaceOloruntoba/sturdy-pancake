@@ -24,7 +24,7 @@ const heroImageCarouselUrls = [
 ];
 
 const helpSectionImageUrl =
-  "https://images.unsplash.com/photo-1616893630453-6a5b9b9b9b9b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; // Muslim woman smiling
+  "https://image.freepik.com/free-photo/portrait-pretty-smiling-muslim-woman-background_23-2148188735.jpg"; // Muslim woman smiling
 
 const pricingSectionBgImageUrl =
   "https://images.unsplash.com/photo-1621931818788-3d8b8b8b8b8b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; // Islamic geometric pattern (abstract)
