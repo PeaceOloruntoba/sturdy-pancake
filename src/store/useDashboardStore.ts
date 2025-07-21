@@ -25,7 +25,7 @@ interface DashboardState {
 export const useDashboardStore = create<DashboardState>((set) => ({ 
   users: [],
   isLoading: false,
-  fetchUsers: async (userGender: string) => { 
+  fetchUsers: async () => { 
     set({ isLoading: true });
     try {
       
