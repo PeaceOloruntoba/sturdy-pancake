@@ -17,10 +17,10 @@ import Footer from "../components/Footer";
 
 const heroImageCarouselUrls = [
   "https://tse2.mm.bing.net/th/id/OIP.KSMEguBxtFIZ0V8Chk8qOAHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Muslim couple praying
-  "https://images.unsplash.com/photo-1629815039209-661d4b6b2b7b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Muslim students studying
-  "https://images.unsplash.com/photo-1629815039209-661d4b6b2b7b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Muslim family joy (using a similar image for variety)
-  "https://images.unsplash.com/photo-1607990281513-ad91746e16f7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Quran and ring (symbolic)
-  "https://images.unsplash.com/photo-1607990283405-c4917a1d1d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Another student-focused image
+  "https://img.freepik.com/premium-photo/spirit-collaborative-learning-muslim-students-engage-vibrant-study-sessions-terengganu_983420-279212.jpg", // Muslim students studying
+  "https://img.freepik.com/premium-photo/happy-muslim-family-enjoying-holy-month-ramadan-while-praying-reading-quran-together-modern-home_530697-71040.jpg", // Muslim family joy (using a similar image for variety)
+  "https://askislam.ir/en/wp-content/uploads/2017/06/515.jpg", // Quran and ring (symbolic)
+  "https://tse4.mm.bing.net/th/id/OIP.gsObhuNBh9NakMGdBfuxgQHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Another student-focused image
 ];
 
 const helpSectionImageUrl =
