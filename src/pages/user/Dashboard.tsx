@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
-import { FaComments, FaImage } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaComments, FaImage, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import { useChatStore } from "../../store/useChatStore";
 import { Filter } from "bad-words";
 import { toast } from "sonner";
+import UserProfileDetail from "./UserProfileDetail"; // Import UserProfileDetail
 
 const filter = new Filter();
 
@@ -20,11 +21,12 @@ interface User {
 
 export default function Dashboard() {
   const { user } = useAuthStore();
-  const { users, isLoading, fetchUsers, requestPhotoAccess } =
-    useDashboardStore();
+  const { users, isLoading, fetchUsers, requestPhotoAccess } = useDashboardStore();
   const { sendMessage } = useChatStore();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false); // Renamed for clarity
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // New state for profile modal
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUserIdForProfile, setSelectedUserIdForProfile] = useState<string | null>(null); // For profile modal
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -50,13 +52,23 @@ export default function Dashboard() {
 
     toast.success(`Message sent to ${selectedUser.firstName}. Opening chat.`);
     setMessage("");
-    setIsModalOpen(false);
+    setIsMessageModalOpen(false);
 
     navigate(`/chats?userId=${selectedUser.id}`);
   };
 
   const handleRequestPhoto = async (targetUserId: string) => {
     await requestPhotoAccess(targetUserId);
+  };
+
+  const openProfileModal = (userId: string) => {
+    setSelectedUserIdForProfile(userId);
+    setIsProfileModalOpen(true);
+  };
+
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false);
+    setSelectedUserIdForProfile(null);
   };
 
   return (
@@ -71,26 +83,25 @@ export default function Dashboard() {
               <tr className="bg-rose-600 text-white">
                 <th className="p-3 text-left">Name</th>
                 <th className="p-3 text-left">Age</th>
-                {/* <th className="p-3 text-left">Looking For</th> */}
-                <th className="p-3 text-left">Message</th>
+                <th className="p-3 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map((u) => (
                 <tr
                   key={u.id}
-                  className="border-b hover:bg-rose-50 transition-all duration-300"
+                  onClick={() => openProfileModal(u.id)} // Open modal on row click
+                  className="border-b hover:bg-rose-50 transition-all duration-300 cursor-pointer"
                 >
                   <td className="p-3">
                     {u.firstName} {u.lastName}
                   </td>
                   <td className="p-3">{u.age}</td>
-                  {/* <td className="p-3">{u.lookingFor}</td> */}
-                  <td className="p-3 flex gap-2">
+                  <td className="p-3 flex gap-2" onClick={(e) => e.stopPropagation()}> {/* Prevent row click on buttons */}
                     <button
                       onClick={() => {
                         setSelectedUser(u);
-                        setIsModalOpen(true);
+                        setIsMessageModalOpen(true);
                       }}
                       className="p-2 rounded-full bg-rose-600 text-white hover:bg-rose-700 hover:scale-110 transition-all duration-300"
                       title="Message"
@@ -112,8 +123,9 @@ export default function Dashboard() {
         </div>
       )}
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center animate-fadeIn">
+      {/* Message Modal */}
+      {isMessageModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center animate-fadeIn z-40">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h3 className="text-xl font-bold mb-4">
               Send Message to {selectedUser?.firstName}
@@ -128,7 +140,7 @@ export default function Dashboard() {
             />
             <div className="flex justify-end gap-2 mt-4">
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => setIsMessageModalOpen(false)}
                 className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-all"
               >
                 Cancel
@@ -139,6 +151,27 @@ export default function Dashboard() {
               >
                 Send
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Profile Detail Modal */}
+      {isProfileModalOpen && selectedUserIdForProfile && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeProfileModal}
+          ></div>
+          <div className="fixed inset-y-0 left-0 w-[80%] h-full bg-white shadow-xl transform transition-transform duration-300 ease-out translate-x-0 mx-auto">
+            <div className="p-6 h-full overflow-y-auto">
+              <button
+                onClick={closeProfileModal}
+                className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl"
+              >
+                <FaTimes />
+              </button>
+              <UserProfileDetail userId={selectedUserIdForProfile} onClose={closeProfileModal} />
             </div>
           </div>
         </div>
