@@ -14,6 +14,7 @@ import {
 import { Button } from "../components/Button";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { home } from "../assets";
 
 const heroImageCarouselUrls = [
   "https://tse2.mm.bing.net/th/id/OIP.KSMEguBxtFIZ0V8Chk8qOAHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Muslim couple praying
@@ -23,8 +24,6 @@ const heroImageCarouselUrls = [
   "https://tse4.mm.bing.net/th/id/OIP.gsObhuNBh9NakMGdBfuxgQHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Another student-focused image
 ];
 
-const helpSectionImageUrl =
-  "https://image.freepik.com/free-photo/portrait-pretty-smiling-muslim-woman-background_23-2148188735.jpg"; // Muslim woman smiling
 
 const pricingSectionBgImageUrl =
   "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"; // Islamic geometric pattern (abstract)
@@ -137,9 +136,9 @@ export default function HomePage() {
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="md:w-1/2 flex justify-center">
             <img
-              src={helpSectionImageUrl}
+              src={home}
               alt="A Muslim woman smiling, representing support"
-              className="rounded-3xl shadow-lg w-full max-w-sm md:max-w-md h-auto object-cover"
+              className="rounded-3xl shadow-lg w-full max-w-sm md:max-w-md h-96 object-cover"
             />
           </div>
           <div className="text-center md:text-left md:w-1/2">
