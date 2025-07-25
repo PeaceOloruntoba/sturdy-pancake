@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { usePhotoStore } from "../../store/usePhotoStore";
 import { toast } from "sonner";
-import { FaImage, FaLock, FaUnlock, FaHourglassHalf, FaTimesCircle, FaTimes, FaComments } from "react-icons/fa"; // Added FaTimes for close button
+import { FaImage, FaLock, FaUnlock, FaHourglassHalf, FaTimesCircle, FaComments } from "react-icons/fa"; // Added FaTimes for close button
 import { useNavigate } from "react-router";
 
 interface ProfileWithPhotos {
@@ -117,9 +117,9 @@ export default function UserProfileDetail({ userId, onClose }: UserProfileDetail
         <h2 className="text-3xl font-bold text-gray-900">
           {profileData.firstName} {profileData.lastName}'s Profile
         </h2>
-        <button onClick={onClose} className="text-gray-600 hover:text-gray-900 text-2xl">
+        {/* <button onClick={onClose} className="text-gray-600 hover:text-gray-900 text-2xl">
           <FaTimes />
-        </button>
+        </button> */}
       </div>
 
       <div className="space-y-4 mb-6 flex-grow overflow-y-auto">
@@ -140,7 +140,7 @@ export default function UserProfileDetail({ userId, onClose }: UserProfileDetail
                     key={photo.id}
                     src={photo.url}
                     alt={`${profileData.firstName}'s photo`}
-                    className="w-full h-48 object-cover rounded-lg shadow-md"
+                    className="w-full h-full object-cover rounded-lg shadow-md"
                   />
                 ))}
               </div>
