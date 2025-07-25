@@ -143,7 +143,7 @@ export default function HomePage() {
             />
           </div>
           <div className="text-center md:text-left md:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 w-fit p-2 px-6 rounded-lg shadow-lg">
               We're here to help you
             </h2>
             <p className="text-lg md:text-xl text-gray-700 mb-8">
