@@ -176,7 +176,7 @@ export const usePhotoStore = create<PhotoState>((set) => ({
   fetchUserProfileWithPhotos: async (userId: string) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await api.get(`/api/users/${userId}/profile-with-photos`);
+      const response = await api.get(`/api/users/${userId}`);
       set({ isLoading: false });
       return response.data; // Return the profile data
     } catch (err: any) {
