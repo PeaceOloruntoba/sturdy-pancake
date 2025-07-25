@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { usePhotoStore } from "../../store/usePhotoStore";
 import { FaUpload, FaTrash, FaEye, FaTimes, FaCheck } from "react-icons/fa";
 import { toast } from "sonner";
-import UserProfileDetail from "./UserProfileDetail"; // Import the detailed profile component
+import UserProfileDetail from "./UserProfileDetail";
 
 export default function PhotosPage() {
   const {
@@ -27,10 +27,15 @@ export default function PhotosPage() {
     fetchReceivedRequests();
   }, [fetchPhotos, fetchSentRequests, fetchReceivedRequests]);
 
+  // Debugging: Log sentRequests to verify data structure
+  useEffect(() => {
+    console.log("Sent Requests:", sentRequests);
+  }, [sentRequests]);
+
   const handlePhotoUpload = async () => {
     if (newPhoto) {
       await uploadPhoto(newPhoto);
-      setNewPhoto(null); // Clear the selected file
+      setNewPhoto(null);
     } else {
       toast.error("Please select a photo to upload.");
     }
@@ -47,17 +52,24 @@ export default function PhotosPage() {
   };
 
   const openProfileDetailModal = (userId: string) => {
+    if (!userId) {
+      console.error("Invalid userId:", userId);
+      toast.error("Cannot open profile: Invalid user ID");
+      return;
+    }
+    console.log("Opening profile modal for userId:", userId);
     setSelectedUserForDetail(userId);
     setIsProfileDetailOpen(true);
   };
 
   const closeProfileDetailModal = () => {
+    console.log("Closing profile modal");
     setIsProfileDetailOpen(false);
     setSelectedUserForDetail(null);
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn max-w-4xl mx-auto relative"> {/* Added relative for modal positioning */}
+    <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn max-w-4xl mx-auto relative">
       <h2 className="text-3xl font-bold text-gray-900 mb-6">Your Photos & Requests</h2>
 
       {isLoading && <div className="text-center text-lg">Loading...</div>}
@@ -186,8 +198,11 @@ export default function PhotosPage() {
                 </div>
                 {request.status === "accepted" && (
                   <button
-                    onClick={() => openProfileDetailModal(request.targetUserId._id)}
-                    className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors ml-4"
+                    onClick={() => {
+                      console.log("Eye button clicked for request:", request);
+                      openProfileDetailModal(request.targetUserId._id);
+                    }}
+                    className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors ml-4 cursor-pointer"
                     title="View Photos"
                   >
                     <FaEye />
@@ -199,13 +214,19 @@ export default function PhotosPage() {
         )}
       </section>
 
-      {/* Profile Detail Sliding Modal (for viewing accepted requests) */}
+      {/* Profile Detail Modal */}
       {isProfileDetailOpen && selectedUserForDetail && (
-        <div className={`fixed inset-0 z-40 overflow-hidden`}>
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeProfileDetailModal}></div>
-          <div className={`fixed right-0 top-0 h-full w-full md:w-1/2 lg:w-1/3 bg-white shadow-xl transform transition-transform duration-300 ease-out ${isProfileDetailOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeProfileDetailModal}
+          ></div>
+          <div className="fixed inset-y-0 left-0 w-[80%] h-full bg-white shadow-xl transform transition-transform duration-300 ease-out translate-x-0 mx-auto">
             <div className="p-6 h-full overflow-y-auto">
-              <button onClick={closeProfileDetailModal} className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl">
+              <button
+                onClick={closeProfileDetailModal}
+                className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl"
+              >
                 <FaTimes />
               </button>
               <UserProfileDetail userId={selectedUserForDetail} onClose={closeProfileDetailModal} />
