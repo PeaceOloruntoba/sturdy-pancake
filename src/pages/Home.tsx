@@ -310,9 +310,9 @@ export default function HomePage() {
       >
         <div className="absolute inset-0 bg-black/70 bg-opacity-60"></div>
         <div className="container mx-auto text-center relative z-10 text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8">
+          {/* <h2 className="text-3xl md:text-4xl font-bold mb-8">
             Simple, Transparent Pricing
-          </h2>
+          </h2> */}
           <div className="max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-lg rounded-xl p-6 transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl text-gray-900">
             <h3 className="text-2xl font-bold mb-2">Premium Membership</h3>
             <p className="text-gray-700 mb-4">
