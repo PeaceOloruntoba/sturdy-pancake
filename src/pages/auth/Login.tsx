@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router";
 import { toast } from "sonner";
 import { useAuthStore } from "../../store/useAuthStore";
-import { FaHeart } from "react-icons/fa";
 import { Button } from "../../components/Button";
+import { logo } from "../../assets";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ export default function LoginPage() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-8">
           <Link to="/" className="flex items-center space-x-2">
-            <FaHeart className="h-8 w-8 text-rose-600" />
+        <img src={logo} alt="" className="w-12 h-12" />
             <span className="text-2xl font-bold text-gray-900">
               Unistudents Match
             </span>
