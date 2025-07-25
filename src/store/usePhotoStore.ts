@@ -12,7 +12,11 @@ interface Photo {
 
 interface PhotoRequest {
   _id: string;
-  requesterId: string;
+  requesterId: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  };
   targetUserId: {
     _id: string;
     firstName: string;
@@ -21,6 +25,20 @@ interface PhotoRequest {
   status: "pending" | "accepted" | "rejected";
   createdAt: string;
   updatedAt: string;
+}
+
+interface ProfileWithPhotos {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  gender: string;
+  university: string;
+  status: string;
+  description: string;
+  lookingFor: string;
+  photos: { id: string; url: string }[];
+  photoAccessStatus: 'restricted' | 'pending' | 'accepted' | 'rejected' | 'granted_self' | 'granted_by_request';
 }
 
 interface PhotoState {
@@ -36,6 +54,7 @@ interface PhotoState {
   fetchSentRequests: () => Promise<void>;
   fetchReceivedRequests: () => Promise<void>;
   respondToPhotoRequest: (requestId: string, status: "accepted" | "rejected") => Promise<void>;
+  fetchUserProfileWithPhotos: (userId: string) => Promise<ProfileWithPhotos | null>;
 }
 
 export const usePhotoStore = create<PhotoState>((set) => ({
@@ -151,6 +170,20 @@ export const usePhotoStore = create<PhotoState>((set) => ({
       const message = err.response?.data?.message || "Failed to respond to request";
       set({ error: message, isLoading: false });
       toast.error(message);
+    }
+  },
+
+  fetchUserProfileWithPhotos: async (userId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await api.get(`/api/users/${userId}/profile-with-photos`);
+      set({ isLoading: false });
+      return response.data; // Return the profile data
+    } catch (err: any) {
+      const message = err.response?.data?.message || "Failed to fetch user profile with photos";
+      set({ error: message, isLoading: false });
+      toast.error(message);
+      return null;
     }
   },
 }));
