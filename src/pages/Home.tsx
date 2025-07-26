@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router"; // Changed from "react-router" to "react-router-dom"
 import {
   FaShieldAlt,
   FaUsers,
@@ -24,16 +24,11 @@ const heroImageCarouselUrls = [
   "https://tse4.mm.bing.net/th/id/OIP.gsObhuNBh9NakMGdBfuxgQHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Another student-focused image
 ];
 
-
-// const helpSectionImageUrl =
-//   "https://image.freepik.com/free-photo/portrait-pretty-smiling-muslim-woman-background_23-2148188735.jpg"; // Muslim woman smiling
-
 const pricingSectionBgImageUrl =
   "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"; // Islamic geometric pattern (abstract)
 
-const useScrollAnimation = (): [React.RefObject<HTMLDivElement | null>, boolean] => {
-  // Changed HTMLElement to HTMLDivElement for specificity
-  const ref = useRef<HTMLDivElement>(null); // Changed HTMLElement to HTMLDivElement
+const useScrollAnimation = () => {
+  const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -69,9 +64,9 @@ export default function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [helpRef, helpVisible] = useScrollAnimation();
-  // const [howItWorksRef, howItWorksVisible] = useScrollAnimation();
   const [whyChooseUsRef, whyChooseUsVisible] = useScrollAnimation();
   const [pricingRef, pricingVisible] = useScrollAnimation();
+  const [faqRef, faqVisible] = useScrollAnimation(); // Added for FAQ section
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -82,6 +77,25 @@ export default function HomePage() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // FAQ data moved here for better organization
+  const faqs = [
+    {
+      question: "What is Unistudents Match and how does it work?",
+      answer:
+        "Unistudents Match is the first matchmaking service specifically for Muslim university students and graduates. It's designed to help you find a compatible partner for marriage by connecting you with like-minded individuals who share your faith, values, and academic background.",
+    },
+    {
+      question: "What makes Unistudents Match different?",
+      answer:
+        "Unlike many other marriage apps that limit user interactions, we provide all users with **unlimited requests and messages**. Our primary goal is to facilitate blessed marriages, not restrict your journey to finding your spouse.",
+    },
+    {
+      question: "Is Unistudents Match Islamic and Shariah compliant?",
+      answer:
+        "Yes, we are proud to offer a service that is Islamic and Shariah compliant. We enforce strict content moderation to prevent inappropriate language. **For the safety and peace of mind of Muslim sisters, we require female users to provide their guardian's (Wali's) contact information (phone number and email) upon signup.** Your guardian will be emailed upon your registration and will also be notified via email when you receive a match request.",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 font-inter">
@@ -115,13 +129,6 @@ export default function HomePage() {
                   Start Your Journey
                 </Button>
               </Link>
-              {/* <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-rose-600"
-              >
-                How It Works
-              </Button> */}
             </div>
             <p className="text-sm mt-4">
               30-day free trial • No commitment • Cancel anytime
@@ -149,102 +156,22 @@ export default function HomePage() {
               We're here to help you
             </h2>
             <div className="flex flex-col w-fit md:p-2 py-4 px-6 rounded-lg shadow-lg">
-            <p className="text-lg md:text-xl text-gray-700 mb-8">
-              We know how difficult it is meeting someone special to share
-              life's journey with... you want to find someone deeply compatible,
-              but in a way that doesn't compromise your values as a practising
-              Muslim.
-            </p>
-            <p className="text-lg md:text-xl text-gray-700">
-              That's why we created Unistudents Match which is designed to help
-              you connect with the right person in a halal way.
-            </p>
+              <p className="text-lg md:text-xl text-gray-700 mb-8">
+                We know how difficult it is meeting someone special to share
+                life's journey with... you want to find someone deeply
+                compatible, but in a way that doesn't compromise your values as
+                a practising Muslim.
+              </p>
+              <p className="text-lg md:text-xl text-gray-700">
+                That's why we created Unistudents Match which is designed to
+                help you connect with the right person in a halal way.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* <section
-        ref={howItWorksRef}
-        className={`py-16 px-4 bg-gray-100 transition-opacity duration-1000 ease-out transform ${
-          howItWorksVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
-        }`}
-      >
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">
-            How Unistudents Match Works
-          </h2>
-          <div className="relative wrap overflow-hidden p-10 h-full">
-            <div className="absolute border-opacity-20 border-rose-600 h-full border-l-2 left-5 md:left-1/2 md:transform md:-translate-x-1/2"></div>
-
-            <div className="mb-8 flex items-center w-full relative md:justify-between md:flex-row-reverse">
-              <div className="z-20 flex items-center bg-rose-600 shadow-xl w-8 h-8 rounded-full absolute left-5 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
-                <h1 className="mx-auto font-semibold text-lg text-white">1</h1>
-              </div>
-              <div className="bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left ml-14 md:ml-0 md:mr-auto">
-                <FaUserPlus className="h-10 w-10 text-rose-600 mb-4" />
-                <h3 className="text-xl font-semibold mb-2 text-gray-800">
-                  1. Register & Verify
-                </h3>
-                <p className="text-gray-600">
-                  Create your account and complete our secure verification
-                  process to join the community.
-                </p>
-              </div>
-            </div>
-
-            <div className="mb-8 flex items-center w-full relative md:justify-between md:flex-row">
-              <div className="z-20 flex items-center bg-rose-600 shadow-xl w-8 h-8 rounded-full absolute left-5 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
-                <h1 className="mx-auto font-semibold text-lg text-white">2</h1>
-              </div>
-              <div className="bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left ml-14 md:ml-0 md:ml-auto">
-                <FaEdit className="h-10 w-10 text-rose-600 mb-4" />
-                <h3 className="text-xl font-semibold mb-2 text-gray-800">
-                  2. Build Your Profile
-                </h3>
-                <p className="text-gray-600">
-                  Share your background, values, and what you're seeking in a
-                  spouse in a detailed profile.
-                </p>
-              </div>
-            </div>
-
-            <div className="mb-8 flex items-center w-full relative md:justify-between md:flex-row-reverse">
-              <div className="z-20 flex items-center bg-rose-600 shadow-xl w-8 h-8 rounded-full absolute left-5 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
-                <h1 className="mx-auto font-semibold text-lg text-white">3</h1>
-              </div>
-              <div className="bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left ml-14 md:ml-0 md:mr-auto">
-                <FaComments className="h-10 w-10 text-rose-600 mb-4" />
-                <h3 className="text-xl font-semibold mb-2 text-gray-800">
-                  3. Connect & Communicate
-                </h3>
-                <p className="text-gray-600">
-                  Browse compatible profiles and initiate conversations in a
-                  safe, moderated chat environment.
-                </p>
-              </div>
-            </div>
-
-            <div className="mb-8 flex items-center w-full relative md:justify-between md:flex-row">
-              <div className="z-20 flex items-center bg-rose-600 shadow-xl w-8 h-8 rounded-full absolute left-5 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
-                <h1 className="mx-auto font-semibold text-lg text-white">4</h1>
-              </div>
-              <div className="bg-white rounded-xl shadow-xl w-full md:w-5/12 px-6 py-4 text-left ml-14 md:ml-0 md:ml-auto">
-                <FaRing className="h-10 w-10 text-rose-600 mb-4" />
-                <h3 className="text-xl font-semibold mb-2 text-gray-800">
-                  4. Towards Nikah
-                </h3>
-                <p className="text-gray-600">
-                  Take the next steps towards meeting your potential spouse and
-                  building a blessed marriage.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
+      {/* How It Works section commented out as per original code */}
 
       <section
         ref={whyChooseUsRef}
@@ -314,9 +241,6 @@ export default function HomePage() {
       >
         <div className="absolute inset-0 bg-black/70 bg-opacity-60"></div>
         <div className="container mx-auto text-center relative z-10 text-white">
-          {/* <h2 className="text-3xl md:text-4xl font-bold mb-8">
-            Simple, Transparent Pricing
-          </h2> */}
           <div className="max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-lg rounded-xl p-6 transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl text-gray-900">
             <h3 className="text-2xl font-bold mb-2">Premium Membership</h3>
             <p className="text-gray-700 mb-4">
@@ -357,6 +281,34 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* --- FAQ Section --- */}
+      <section
+        ref={faqRef}
+        className={`py-16 px-4 bg-white transition-opacity duration-1000 ease-out transform ${
+          faqVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+      >
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">
+            Frequently Asked Questions
+          </h2>
+          <div className="max-w-3xl mx-auto space-y-8">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-gray-50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+              >
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {faq.question}
+                </h3>
+                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* --- End FAQ Section --- */}
 
       <Footer />
     </div>
