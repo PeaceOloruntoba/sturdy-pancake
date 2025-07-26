@@ -14,7 +14,7 @@ import {
 import { Button } from "../components/Button";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { home } from "../assets";
+// import { home } from "../assets";
 
 const heroImageCarouselUrls = [
   "https://tse2.mm.bing.net/th/id/OIP.KSMEguBxtFIZ0V8Chk8qOAHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Muslim couple praying
@@ -24,6 +24,9 @@ const heroImageCarouselUrls = [
   "https://tse4.mm.bing.net/th/id/OIP.gsObhuNBh9NakMGdBfuxgQHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Another student-focused image
 ];
 
+
+const helpSectionImageUrl =
+  "https://image.freepik.com/free-photo/portrait-pretty-smiling-muslim-woman-background_23-2148188735.jpg"; // Muslim woman smiling
 
 const pricingSectionBgImageUrl =
   "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"; // Islamic geometric pattern (abstract)
@@ -112,13 +115,13 @@ export default function HomePage() {
                   Start Your Journey
                 </Button>
               </Link>
-              <Button
+              {/* <Button
                 size="lg"
                 variant="outline"
                 className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-rose-600"
               >
                 How It Works
-              </Button>
+              </Button> */}
             </div>
             <p className="text-sm mt-4">
               30-day free trial • No commitment • Cancel anytime
@@ -136,15 +139,16 @@ export default function HomePage() {
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="md:w-1/2 flex justify-center">
             <img
-              src={home}
+              src={helpSectionImageUrl}
               alt="A Muslim woman smiling, representing support"
               className="rounded-3xl shadow-lg w-full max-w-sm md:max-w-md h-96 object-cover"
             />
           </div>
           <div className="text-center md:text-left md:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 w-fit p-2 px-6 rounded-lg shadow-lg">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               We're here to help you
             </h2>
+            <div className="flex flex-col w-fit p-2 px-6 rounded-lg shadow-lg">
             <p className="text-lg md:text-xl text-gray-700 mb-8">
               We know how difficult it is meeting someone special to share
               life's journey with... you want to find someone deeply compatible,
@@ -155,6 +159,7 @@ export default function HomePage() {
               That's why we created Unistudents Match which is designed to help
               you connect with the right person in a halal way.
             </p>
+            </div>
           </div>
         </div>
       </section>
