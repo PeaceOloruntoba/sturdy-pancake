@@ -148,7 +148,7 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               We're here to help you
             </h2>
-            <div className="flex flex-col w-fit p-2 px-6 rounded-lg shadow-lg">
+            <div className="flex flex-col w-fit md:p-2 py-4 px-6 rounded-lg shadow-lg">
             <p className="text-lg md:text-xl text-gray-700 mb-8">
               We know how difficult it is meeting someone special to share
               life's journey with... you want to find someone deeply compatible,
