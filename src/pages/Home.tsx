@@ -1,15 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router"; // Changed from "react-router" to "react-router-dom"
+import { Link } from "react-router"; // Keep this as 'react-router' as per your confirmation
 import {
   FaShieldAlt,
   FaUsers,
   FaHeart,
   FaBolt,
   FaHandshake,
-  // FaUserPlus,
-  // FaEdit,
-  // FaComments,
-  // FaRing,
 } from "react-icons/fa";
 import { Button } from "../components/Button";
 import Header from "../components/Header";
@@ -27,8 +23,9 @@ const heroImageCarouselUrls = [
 const pricingSectionBgImageUrl =
   "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"; // Islamic geometric pattern (abstract)
 
-const useScrollAnimation = () => {
-  const ref = useRef(null);
+// FIX START: Corrected useScrollAnimation type signature
+const useScrollAnimation = (): [React.RefObject<HTMLDivElement>, boolean] => {
+  const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -59,6 +56,7 @@ const useScrollAnimation = () => {
 
   return [ref, isVisible];
 };
+// FIX END
 
 export default function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -66,7 +64,7 @@ export default function HomePage() {
   const [helpRef, helpVisible] = useScrollAnimation();
   const [whyChooseUsRef, whyChooseUsVisible] = useScrollAnimation();
   const [pricingRef, pricingVisible] = useScrollAnimation();
-  const [faqRef, faqVisible] = useScrollAnimation(); // Added for FAQ section
+  const [faqRef, faqVisible] = useScrollAnimation();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,7 +76,6 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // FAQ data moved here for better organization
   const faqs = [
     {
       question: "What is Unistudents Match and how does it work?",
@@ -170,8 +167,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* How It Works section commented out as per original code */}
 
       <section
         ref={whyChooseUsRef}
@@ -282,7 +277,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- FAQ Section --- */}
       <section
         ref={faqRef}
         className={`py-16 px-4 bg-white transition-opacity duration-1000 ease-out transform ${
@@ -308,7 +302,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      {/* --- End FAQ Section --- */}
 
       <Footer />
     </div>
