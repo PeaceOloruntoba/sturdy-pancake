@@ -6,10 +6,10 @@ import {
   FaHeart,
   FaBolt,
   FaHandshake,
-  FaUserPlus,
-  FaEdit,
-  FaComments,
-  FaRing,
+  // FaUserPlus,
+  // FaEdit,
+  // FaComments,
+  // FaRing,
 } from "react-icons/fa";
 import { Button } from "../components/Button";
 import Header from "../components/Header";
@@ -66,7 +66,7 @@ export default function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [helpRef, helpVisible] = useScrollAnimation();
-  const [howItWorksRef, howItWorksVisible] = useScrollAnimation();
+  // const [howItWorksRef, howItWorksVisible] = useScrollAnimation();
   const [whyChooseUsRef, whyChooseUsVisible] = useScrollAnimation();
   const [pricingRef, pricingVisible] = useScrollAnimation();
 
@@ -159,7 +159,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section
+      {/* <section
         ref={howItWorksRef}
         className={`py-16 px-4 bg-gray-100 transition-opacity duration-1000 ease-out transform ${
           howItWorksVisible
@@ -239,7 +239,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <section
         ref={whyChooseUsRef}
