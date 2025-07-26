@@ -1,4 +1,3 @@
-import { FaHeart } from "react-icons/fa";
 import { logo } from "../assets";
 
 export default function Footer() {
