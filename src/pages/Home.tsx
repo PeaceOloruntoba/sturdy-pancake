@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router"; // Keep this as 'react-router' as per your confirmation
+import { Link } from "react-router";
 import {
   FaShieldAlt,
   FaUsers,
   FaHeart,
   FaBolt,
   FaHandshake,
+  FaChevronDown,
+  FaChevronUp,
 } from "react-icons/fa";
 import { Button } from "../components/Button";
 import Header from "../components/Header";
@@ -13,18 +15,20 @@ import Footer from "../components/Footer";
 import { home } from "../assets";
 
 const heroImageCarouselUrls = [
-  "https://tse2.mm.bing.net/th/id/OIP.KSMEguBxtFIZ0V8Chk8qOAHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Muslim couple praying
-  "https://img.freepik.com/premium-photo/spirit-collaborative-learning-muslim-students-engage-vibrant-study-sessions-terengganu_983420-279212.jpg", // Muslim students studying
-  "https://img.freepik.com/premium-photo/happy-muslim-family-enjoying-holy-month-ramadan-while-praying-reading-quran-together-modern-home_530697-71040.jpg", // Muslim family joy (using a similar image for variety)
-  "https://askislam.ir/en/wp-content/uploads/2017/06/515.jpg", // Quran and ring (symbolic)
-  "https://tse4.mm.bing.net/th/id/OIP.gsObhuNBh9NakMGdBfuxgQHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", // Another student-focused image
+  "https://tse2.mm.bing.net/th/id/OIP.KSMEguBxtFIZ0V8Chk8qOAHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+  "https://img.freepik.com/premium-photo/spirit-collaborative-learning-muslim-students-engage-vibrant-study-sessions-terengganu_983420-279212.jpg",
+  "https://img.freepik.com/premium-photo/happy-muslim-family-enjoying-holy-month-ramadan-while-praying-reading-quran-together-modern-home_530697-71040.jpg",
+  "https://askislam.ir/en/wp-content/uploads/2017/06/515.jpg",
+  "https://tse4.mm.bing.net/th/id/OIP.gsObhuNBh9NakMGdBfuxgQHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
 ];
 
 const pricingSectionBgImageUrl =
-  "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"; // Islamic geometric pattern (abstract)
+  "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3";
 
-// FIX START: Corrected useScrollAnimation type signature
-const useScrollAnimation = (): [React.RefObject<HTMLDivElement | null>, boolean] => {
+const useScrollAnimation = (): [
+  React.RefObject<HTMLDivElement | null>,
+  boolean
+] => {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -56,10 +60,11 @@ const useScrollAnimation = (): [React.RefObject<HTMLDivElement | null>, boolean]
 
   return [ref, isVisible];
 };
-// FIX END
 
 export default function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   const [helpRef, helpVisible] = useScrollAnimation();
   const [whyChooseUsRef, whyChooseUsVisible] = useScrollAnimation();
@@ -75,6 +80,10 @@ export default function HomePage() {
 
     return () => clearInterval(interval);
   }, []);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
 
   const faqs = [
     {
@@ -97,7 +106,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 font-inter">
       <Header />
-
+      {/* Hero Section */}
       <section
         className="relative py-20 px-4 overflow-hidden md:py-32 bg-cover bg-center transition-all duration-1000 ease-in-out"
         style={{
@@ -133,7 +142,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
+      {/* Help Section */}
       <section
         ref={helpRef}
         className={`py-16 px-4 bg-white transition-opacity duration-1000 ease-out transform ${
@@ -167,7 +176,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
+      {/* Why Choose Us Section */}
       <section
         ref={whyChooseUsRef}
         className={`py-16 px-4 bg-gray-50 transition-opacity duration-1000 ease-out transform ${
@@ -224,7 +233,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
+      {/* Pricing Section */}
       <section
         ref={pricingRef}
         className={`relative py-16 px-4 bg-cover bg-center transition-opacity duration-1000 ease-out transform ${
@@ -277,6 +286,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FAQ Section - UPDATED FOR INTERACTIVITY */}
       <section
         ref={faqRef}
         className={`py-16 px-4 bg-white transition-opacity duration-1000 ease-out transform ${
@@ -287,22 +297,41 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">
             Frequently Asked Questions
           </h2>
-          <div className="max-w-3xl mx-auto space-y-8">
+          <div className="max-w-3xl mx-auto space-y-4">
+            {" "}
+            {/* Reduced space-y for tighter accordion */}
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="bg-gray-50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+                className="bg-gray-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
               >
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {faq.question}
-                </h3>
-                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+                <button
+                  className="w-full flex justify-between items-center p-6 text-left focus:outline-none transition-all duration-300"
+                  onClick={() => toggleFaq(index)}
+                >
+                  <h3 className="text-xl font-semibold text-gray-900 pr-4">
+                    {faq.question}
+                  </h3>
+                  {openFaqIndex === index ? (
+                    <FaChevronUp className="text-rose-600 text-xl" />
+                  ) : (
+                    <FaChevronDown className="text-gray-500 text-xl" />
+                  )}
+                </button>
+                {openFaqIndex === index && (
+                  <div className="p-6 pt-0">
+                    {" "}
+                    <p className="text-gray-700 leading-relaxed border-t border-gray-200 pt-4">
+                      {" "}
+                      {faq.answer}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
-
       <Footer />
     </div>
   );
