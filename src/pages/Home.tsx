@@ -24,7 +24,7 @@ const pricingSectionBgImageUrl =
   "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"; // Islamic geometric pattern (abstract)
 
 // FIX START: Corrected useScrollAnimation type signature
-const useScrollAnimation = (): [React.RefObject<HTMLDivElement>, boolean] => {
+const useScrollAnimation = (): [React.RefObject<HTMLDivElement | null>, boolean] => {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
