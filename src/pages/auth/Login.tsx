@@ -55,17 +55,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 py-8">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
-          <Link to="/" className="flex items-center space-x-2">
-        <img src={logo} alt="" className="w-12 h-12" />
-            <span className="text-2xl font-bold text-gray-900">
-              Unistudents Match
-            </span>
-          </Link>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 flex flex-col items-center w-full">
+      <div className="flex items-center justify-between p-4 md:px-8 border-b bg-black/80 backdrop-blur-sm w-full h-fit mb-12 md:mb-24">
+        <Link to="/" className="flex items-center space-x-2">
+          <img src={logo} alt="" className="w-12 h-12" />
+          <span className="text-2xl font-bold text-gray-100">
+            Unistudents Match
+          </span>
+        </Link>
+      </div>
 
+      <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-bold mb-2">Login</h2>
           <p className="text-gray-600 mb-6">Sign in to your account</p>
