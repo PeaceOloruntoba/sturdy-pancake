@@ -23,7 +23,7 @@ const heroImageCarouselUrls = [
 ];
 
 const pricingSectionBgImageUrl =
-  "https://tse1.mm.bing.net/th/id/OIP.gF_bHO0WkT8obtnQZw9YFgHaEw?r=0&rs=1&pid=ImgDetMain&o=7&rm=3";
+  "https://img.freepik.com/premium-photo/spirit-collaborative-learning-muslim-students-engage-vibrant-study-sessions-terengganu_983420-279212.jpg";
 
 const useScrollAnimation = (): [
   React.RefObject<HTMLDivElement | null>,
