@@ -6,7 +6,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { Button } from "../components/Button";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import api from "../utils/api";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+// import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { logo } from "../assets";
 
 export default function SubscribePage() {
@@ -17,8 +17,8 @@ export default function SubscribePage() {
     "paypal" | "stripe"
   >("paypal");
 
-  const stripe = useStripe();
-  const elements = useElements();
+  // const stripe = useStripe();
+  // const elements = useElements();
 
   useEffect(() => {
     if (!user || !token) {
@@ -69,38 +69,38 @@ export default function SubscribePage() {
     }
   };
 
-  const handleStripeSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!stripe || !elements || !user || !token) {
-      toast.error("Payment gateway not loaded or user not authenticated.");
-      return;
-    }
-    setIsSubmitting(true);
+  // const handleStripeSubmit = async (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   if (!stripe || !elements || !user || !token) {
+  //     toast.error("Payment gateway not loaded or user not authenticated.");
+  //     return;
+  //   }
+  //   setIsSubmitting(true);
 
-    const cardElement = elements.getElement(CardElement);
-    if (!cardElement) {
-      toast.error("Card details are missing.");
-      setIsSubmitting(false);
-      return;
-    }
+  //   const cardElement = elements.getElement(CardElement);
+  //   if (!cardElement) {
+  //     toast.error("Card details are missing.");
+  //     setIsSubmitting(false);
+  //     return;
+  //   }
 
-    const { paymentMethod, error } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-      billing_details: {
-        email: user.email,
-        name: `${user.firstName} ${user.lastName}`,
-      },
-    });
+  //   const { paymentMethod, error } = await stripe.createPaymentMethod({
+  //     type: "card",
+  //     card: cardElement,
+  //     billing_details: {
+  //       email: user.email,
+  //       name: `${user.firstName} ${user.lastName}`,
+  //     },
+  //   });
 
-    if (error) {
-      toast.error(error.message || "Failed to create payment method.");
-      setIsSubmitting(false);
-      return;
-    }
+  //   if (error) {
+  //     toast.error(error.message || "Failed to create payment method.");
+  //     setIsSubmitting(false);
+  //     return;
+  //   }
 
-    await handleSubscriptionSuccess(paymentMethod.id, "stripe");
-  };
+  //   await handleSubscriptionSuccess(paymentMethod.id, "stripe");
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 flex flex-col items-center w-full">
@@ -132,7 +132,7 @@ export default function SubscribePage() {
             >
               Pay with PayPal
             </button>
-            <button
+            {/* <button
               className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                 selectedPaymentMethod === "stripe"
                   ? "bg-purple-600 text-white"
@@ -142,7 +142,7 @@ export default function SubscribePage() {
               disabled={isSubmitting || isLoading}
             >
               Pay with Card (Stripe)
-            </button>
+            </button> */}
           </div>
 
           {selectedPaymentMethod === "paypal" && (
@@ -192,7 +192,7 @@ export default function SubscribePage() {
             </div>
           )}
 
-          {selectedPaymentMethod === "stripe" && (
+          {/* {selectedPaymentMethod === "stripe" && (
             <form onSubmit={handleStripeSubmit} className="space-y-4">
               <div className="p-4 border border-gray-300 rounded-lg bg-gray-50">
                 <label
@@ -228,7 +228,7 @@ export default function SubscribePage() {
                 {isSubmitting ? "Processing..." : "Subscribe with Card"}
               </Button>
             </form>
-          )}
+          )} */}
 
           <div className="mt-6">
             <Button
