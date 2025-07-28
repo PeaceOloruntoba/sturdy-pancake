@@ -125,7 +125,7 @@ export const usePhotoStore = create<PhotoState>((set) => ({
       }));
       toast.success("Photo request sent!");
     } catch (err: any) {
-      const message = err.response?.data?.message || "Failed to send photo request";
+      const message = err.message || "Failed to send photo request";
       set({ error: message, isLoading: false });
       toast.error(message);
     }

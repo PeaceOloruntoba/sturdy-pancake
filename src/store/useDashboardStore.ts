@@ -48,9 +48,9 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       
       
     } catch (error: any) {
-      const message = error.response?.data?.message || "Failed to send photo access request";
+      const message = error.message || "Failed to send photo access request";
       toast.error(message);
-      console.error("Request photo access error:", error);
+      console.error("Request photo access error:", error.message);
     } finally {
       set({ isLoading: false });
     }
