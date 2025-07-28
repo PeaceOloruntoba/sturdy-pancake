@@ -94,6 +94,7 @@ export const usePhotoStore = create<PhotoState>((set) => ({
       toast.success("Photo uploaded successfully!");
     } catch (err: any) {
       const message = err.response?.data?.message || "Failed to upload photo";
+      console.log(err)
       set({ error: message, isLoading: false });
       toast.error(message);
     }
