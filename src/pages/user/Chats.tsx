@@ -101,12 +101,16 @@ export default function Chats() {
   }, [messages, user, selectedChat, markMessageAsRead]);
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !selectedChat || !user) {
-      toast.error("Message cannot be empty or no chat selected.");
+    if (!newMessage.trim() || !selectedChat || !user?.id) {
+      // Added user?.id check
+      toast.error(
+        "Message cannot be empty or no chat selected, or user not authenticated."
+      );
       return;
     }
     const cleanedMessage = filter.clean(newMessage);
-    await sendMessage(selectedChat.user.id, cleanedMessage);
+    // Pass the current user's ID as senderId
+    await sendMessage(user.id, selectedChat.user.id, cleanedMessage); // <-- FIX: Added user.id as the first argument
     setNewMessage("");
   };
 
