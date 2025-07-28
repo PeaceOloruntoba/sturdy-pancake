@@ -21,12 +21,15 @@ interface User {
 
 export default function Dashboard() {
   const { user } = useAuthStore();
-  const { users, isLoading, fetchUsers, requestPhotoAccess } = useDashboardStore();
-  const { sendMessage } = useChatStore();
-  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false); // Renamed for clarity
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // New state for profile modal
+  const { users, isLoading, fetchUsers, requestPhotoAccess } =
+    useDashboardStore();
+  const { sendMessage } = useChatStore(); // Destructure sendMessage
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [selectedUserIdForProfile, setSelectedUserIdForProfile] = useState<string | null>(null); // For profile modal
+  const [selectedUserIdForProfile, setSelectedUserIdForProfile] = useState<
+    string | null
+  >(null);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -45,10 +48,16 @@ export default function Dashboard() {
       toast.error("No user selected to send message to.");
       return;
     }
+    if (!user?.id) {
+      // Ensure current user's ID is available
+      toast.error("Your user ID is not available. Please log in again.");
+      return;
+    }
 
     const cleanedMessage = filter.clean(message);
 
-    await sendMessage(selectedUser.id, cleanedMessage);
+    // Pass the current user's ID as senderId
+    await sendMessage(user.id, selectedUser.id, cleanedMessage); // Modified call
 
     toast.success(`Message sent to ${selectedUser.firstName}. Opening chat.`);
     setMessage("");
@@ -90,14 +99,17 @@ export default function Dashboard() {
               {users.map((u) => (
                 <tr
                   key={u.id}
-                  onClick={() => openProfileModal(u.id)} // Open modal on row click
+                  onClick={() => openProfileModal(u.id)}
                   className="border-b hover:bg-rose-50 transition-all duration-300 cursor-pointer"
                 >
                   <td className="p-3">
                     {u.firstName} {u.lastName}
                   </td>
                   <td className="p-3">{u.age}</td>
-                  <td className="p-3 flex gap-2" onClick={(e) => e.stopPropagation()}> {/* Prevent row click on buttons */}
+                  <td
+                    className="p-3 flex gap-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <button
                       onClick={() => {
                         setSelectedUser(u);
@@ -171,7 +183,10 @@ export default function Dashboard() {
               >
                 <FaTimes />
               </button>
-              <UserProfileDetail userId={selectedUserIdForProfile} onClose={closeProfileModal} />
+              <UserProfileDetail
+                userId={selectedUserIdForProfile}
+                onClose={closeProfileModal}
+              />
             </div>
           </div>
         </div>

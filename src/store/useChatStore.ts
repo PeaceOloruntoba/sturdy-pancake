@@ -29,7 +29,11 @@ interface ChatState {
   disconnectSocket: () => void;
   fetchChats: () => Promise<void>;
   fetchMessages: (otherUserId: string) => Promise<void>;
-  sendMessage: (receiverId: string, content: string) => Promise<void>;
+  sendMessage: (
+    senderId: string,
+    receiverId: string,
+    content: string
+  ) => Promise<void>; // Modified
   markMessageAsRead: (
     messageId: string,
     readerId: string,
@@ -78,20 +82,19 @@ export const useChatStore = create<ChatState>()(
           });
           get().fetchChats();
         });
-        socket.on("messageRead", ({ messageId, readerId }) => {
+        socket.on("messageRead", ({ messageId }) => {
           set((state) => ({
             messages: state.messages.map((msg) =>
               msg.id === messageId ? { ...msg, status: "read" } : msg
             ),
           }));
-          throw readerId;
         });
         socket.on("disconnect", () => {
           set({ socket: null });
         });
         socket.on("connect_error", (error) => {
           toast.error("Socket connection failed. Please try again.");
-          throw error;
+          console.error("Socket connection error:", error);
         });
         set({ socket });
       },
@@ -109,6 +112,7 @@ export const useChatStore = create<ChatState>()(
           set({ chats: response.data });
         } catch (error) {
           toast.error("Failed to fetch chats");
+          console.error("Failed to fetch chats:", error); // Log the error
         } finally {
           set({ isLoading: false });
         }
@@ -120,13 +124,17 @@ export const useChatStore = create<ChatState>()(
           set({ messages: response.data });
         } catch (error) {
           toast.error("Failed to fetch messages");
+          console.error("Failed to fetch messages:", error);
         } finally {
           set({ isLoading: false });
         }
       },
-      sendMessage: async (receiverId: string, content: string) => {
+      sendMessage: async (
+        senderId: string,
+        receiverId: string,
+        content: string
+      ) => {
         const tempId = Date.now().toString();
-        const senderId = (get().socket as any)?.userId;
         if (!senderId) {
           toast.error("User not authenticated for sending message.");
           return;
@@ -167,6 +175,7 @@ export const useChatStore = create<ChatState>()(
             messages: state.messages.filter((msg) => msg.id !== tempId),
           }));
           toast.error("Failed to send message");
+          console.error("Failed to send message:", error);
         }
       },
       markMessageAsRead: async (
