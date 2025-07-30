@@ -30,7 +30,6 @@ export default function PhotosPage() {
   }, [fetchPhotos, fetchSentRequests, fetchReceivedRequests]);
 
   useEffect(() => {
-    console.log("Sent Requests:", sentRequests);
   }, [sentRequests]);
 
   const handlePhotoUpload = async () => {
@@ -61,13 +60,11 @@ export default function PhotosPage() {
       toast.error("Cannot open profile: Invalid user ID");
       return;
     }
-    console.log("Opening profile modal for userId:", userId);
     setSelectedUserForDetail(userId);
     setIsProfileDetailOpen(true);
   };
 
   const closeProfileDetailModal = () => {
-    console.log("Closing profile modal");
     setIsProfileDetailOpen(false);
     setSelectedUserForDetail(null);
   };
