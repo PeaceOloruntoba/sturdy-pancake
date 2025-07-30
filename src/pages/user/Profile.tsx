@@ -73,7 +73,6 @@ export default function Profile() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-
   const handleSubmit = async () => {
     if (
       !formData.firstName ||
@@ -99,12 +98,14 @@ export default function Profile() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg animate-fadeIn max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">Your Profile</h2>
+    <div className="p-4 sm:p-6 bg-white rounded-lg shadow-lg animate-fadeIn max-w-lg sm:max-w-2xl mx-auto">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+        Your Profile
+      </h2>
       {isLoading ? (
-        <div className="text-center">Loading...</div>
+        <div className="text-center text-sm sm:text-base">Loading...</div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Email (Read-only)
@@ -113,7 +114,7 @@ export default function Profile() {
               type="email"
               value={user?.email || ""}
               disabled
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 bg-gray-100"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 bg-gray-100 text-sm sm:text-base"
             />
           </div>
           <div>
@@ -126,7 +127,7 @@ export default function Profile() {
               value={formData.firstName}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
             />
           </div>
           <div>
@@ -139,7 +140,7 @@ export default function Profile() {
               value={formData.lastName}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
             />
           </div>
           <div>
@@ -152,7 +153,7 @@ export default function Profile() {
               value={formData.age}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
             />
           </div>
           <div>
@@ -164,7 +165,7 @@ export default function Profile() {
               value={formData.gender}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
             >
               <option value="">Select Gender</option>
               <option value="male">Male</option>
@@ -183,7 +184,7 @@ export default function Profile() {
                   value={formData.guardianEmail}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+                  className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
                 />
               </div>
               <div>
@@ -196,7 +197,7 @@ export default function Profile() {
                   value={formData.guardianPhone}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+                  className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
                 />
               </div>
             </>
@@ -211,7 +212,7 @@ export default function Profile() {
               value={formData.university}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
             />
           </div>
           <div>
@@ -224,7 +225,7 @@ export default function Profile() {
               value={formData.status}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
             />
           </div>
           <div>
@@ -236,7 +237,7 @@ export default function Profile() {
               value={formData.description}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
               rows={4}
             />
           </div>
@@ -249,22 +250,22 @@ export default function Profile() {
               value={formData.lookingFor}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-600"
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
               rows={4}
             />
           </div>
           <div className="flex justify-end gap-2">
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-all flex items-center gap-2"
+              className="px-3 sm:px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-all flex items-center gap-2 text-sm sm:text-base"
             >
-              <FaEdit className="h-5 w-5" />
+              <FaEdit className="h-4 sm:h-5 w-4 sm:w-5" />
               {isEditing ? "Cancel" : "Edit"}
             </button>
             {isEditing && (
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-all"
+                className="px-3 sm:px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-all text-sm sm:text-base"
               >
                 Save
               </button>
