@@ -161,7 +161,12 @@ export default function PhotosPage() {
               >
                 <div className="flex-grow">
                   <p className="font-medium text-sm sm:text-base text-gray-700">
-                    <span className="text-rose-600">
+                    <span
+                      className="text-rose-600 cursor-pointer hover:underline"
+                      onClick={() =>
+                        openProfileDetailModal(request.requesterId._id)
+                      }
+                    >
                       {request.requesterId.firstName}{" "}
                       {request.requesterId.lastName}
                     </span>{" "}
@@ -185,18 +190,20 @@ export default function PhotosPage() {
                 {request.status === "pending" && (
                   <div className="flex space-x-2 mt-2 sm:mt-0 sm:ml-4">
                     <button
-                      onClick={() =>
-                        handleRespondToRequest(request._id, "accepted")
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRespondToRequest(request._id, "accepted");
+                      }}
                       className="p-1 sm:p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
                       title="Accept Request"
                     >
                       <FaCheck className="h-3 sm:h-4 w-3 sm:w-4" />
                     </button>
                     <button
-                      onClick={() =>
-                        handleRespondToRequest(request._id, "rejected")
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRespondToRequest(request._id, "rejected");
+                      }}
                       className="p-1 sm:p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                       title="Reject Request"
                     >
@@ -239,7 +246,12 @@ export default function PhotosPage() {
                 <div className="flex-grow">
                   <p className="font-medium text-sm sm:text-base text-gray-700">
                     Request sent to{" "}
-                    <span className="text-rose-600">
+                    <span
+                      className="text-rose-600 cursor-pointer hover:underline"
+                      onClick={() =>
+                        openProfileDetailModal(request.targetUserId._id)
+                      }
+                    >
                       {request.targetUserId.firstName}{" "}
                       {request.targetUserId.lastName}
                     </span>
@@ -262,9 +274,10 @@ export default function PhotosPage() {
                 </div>
                 {request.status === "accepted" && (
                   <button
-                    onClick={() =>
-                      openProfileDetailModal(request.targetUserId._id)
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openProfileDetailModal(request.targetUserId._id);
+                    }}
                     className="p-1 sm:p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors mt-2 sm:mt-0 sm:ml-4"
                     title="View Photos"
                   >
