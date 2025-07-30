@@ -219,7 +219,7 @@ export default function Dashboard() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={closeProfileModal}
           ></div>
-          <div className="fixed inset-y-0 left-0 w-11/12 sm:w-96 h-full bg-white shadow-xl transform transition-transform duration-300 ease-out translate-x-0">
+          <div className="fixed inset-y-0 left-0 w-2/3 h-full bg-white shadow-xl transform transition-transform duration-300 ease-out translate-x-0">
             <div className="p-4 sm:p-6 h-full overflow-y-auto">
               <button
                 onClick={closeProfileModal}

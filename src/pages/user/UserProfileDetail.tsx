@@ -227,13 +227,13 @@ export default function UserProfileDetail({
         profileData.photoAccessStatus === "granted_by_request" ? (
           <div>
             {profileData.photos.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="flex flex-col gap-3 sm:gap-4">
                 {profileData.photos.map((photo) => (
                   <img
                     key={photo.id}
                     src={photo.url}
                     alt={`${profileData.firstName}'s photo`}
-                    className="w-full h-40 sm:h-48 object-cover rounded-lg shadow-md"
+                    className="w-full object-cover rounded-lg shadow-md"
                   />
                 ))}
               </div>
