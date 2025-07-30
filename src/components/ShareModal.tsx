@@ -18,7 +18,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 
   const siteUrl = "https://unistudentsmatch.com";
   const shareText =
-    "Looking for a spouse who shares your faith and academic background? Check out Unistudents Match, the premier platform for Muslim university students and graduates. Trial available!";
+    "Looking for a spouse who shares your faith and academic background? Check out Unistudents Match, the first ever matchmaking service for Muslim university students and graduates. Trial available!";
 
   const encodedShareText = encodeURIComponent(shareText);
   const encodedSiteUrl = encodeURIComponent(siteUrl);

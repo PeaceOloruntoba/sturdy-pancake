@@ -121,10 +121,8 @@ export default function HomePage() {
               Believe In Your Happy Ever After...
             </h1>
             <p className="text-lg md:text-xl mb-8 max-w-xl mx-auto md:mx-0">
-              The premier platform for Muslim university students and graduates
-              seeking their righteous spouse for a blessed marriage. Connect
-              with like-minded individuals who share their faith, values, and
-              academic journey.
+              First ever matchmaking service for Muslim university students and
+              graduates.
             </p>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
               <Link to="/signup">
