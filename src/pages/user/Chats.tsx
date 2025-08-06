@@ -99,7 +99,7 @@ export default function Chats() {
 
   return (
     <div className="h-full p-4 sm:p-6">
-      <div className="p-4 bg-white w-full rounded-lg shadow-lg animate-fadeIn h-full flex flex-col relative">
+      <div className="p-4 bg-white w-full rounded-lg shadow-lg animate-fadeIn h-fit flex flex-col relative">
               <button
           className="md:hidden mb-4 p-2 bg-rose-600 text-white rounded-lg flex items-center gap-2"
           onClick={() => setIsChatListOpen(!isChatListOpen)}
@@ -145,14 +145,14 @@ export default function Chats() {
             )}
           </div>
           {/* Chat Messages */}
-          <div className="w-full md:w-2/3 flex flex-col pb-16">
+          <div className="w-full md:w-2/3 flex flex-col pb-16 overflow-y-auto">
             {selectedChat ? (
               <>
                 <h3 className="text-lg sm:text-xl font-bold mb-4 p-2 sm:p-3 bg-rose-600 text-white rounded-t-lg">
                   Chat with {selectedChat.user.firstName}{" "}
                   {selectedChat.user.lastName}
                 </h3>
-                <div className="flex-1 overflow-y-scroll p-2 sm:p-4 bg-gray-50 rounded-b-lg">
+                <div className="flex-1 p-2 sm:p-4 bg-gray-50 rounded-b-lg">
                   {isLoading ? (
                     <div className="text-center text-sm sm:text-base">
                       Loading messages...
@@ -198,7 +198,7 @@ export default function Chats() {
                   )}
                   <div ref={messagesEndRef} />
                 </div>
-                <div className="p-2 sm:p-4 flex gap-2 bg-white absolute bottom-0 left-0 right-0">
+                <div className="p-2 sm:p-4 flex gap-2 bg-white fixed bottom-0 left-0 right-0">
                   <input
                     type="text"
                     value={newMessage}
