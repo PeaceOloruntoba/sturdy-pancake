@@ -173,16 +173,16 @@ export default function Chats() {
                         {msg.senderId === user?.id && (
                           <>
                             {msg.status === "sending" && (
-                              <span className="text-gray-400">✓</span>
+                              <span className="hidden"></span>
                             )}
                             {msg.status === "sent" && (
-                              <span className="text-gray-600">✓✓</span>
+                              <span className="font-bold text-gray-600">✓</span>
                             )}
                             {msg.status === "delivered" && (
-                              <span className="text-blue-400">✓✓</span>
+                              <span className="font-bold text-blue-600">✓✓</span>
                             )}
                             {msg.status === "read" && (
-                              <span className="text-blue-600">✓✓</span>
+                              <span className="font-bold text-green-600">✓✓</span>
                             )}
                           </>
                         )}
