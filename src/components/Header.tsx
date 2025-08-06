@@ -1,9 +1,9 @@
 import { Link } from "react-router";
 import { useAuthStore } from "../store/useAuthStore";
 import { Button } from "./Button";
-import { logo } from "../assets/index.ts";
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
+import Logo from "./Logo.tsx";
 
 export default function Header() {
   const { user, logout } = useAuthStore();
@@ -15,11 +15,7 @@ export default function Header() {
     <header className="border-b bg-black/80 backdrop-blur-sm fixed top-0 w-full z-50">
       <div className="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
-          <img
-            src={logo}
-            alt="Unistudents Match Logo"
-            className="w-12 h-12 sm:w-14 sm:h-14"
-          />
+          <Logo />
           <span className="text-xl sm:text-2xl font-bold text-gray-100">
             Unistudents Match
           </span>
