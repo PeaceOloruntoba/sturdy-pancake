@@ -13,7 +13,7 @@ export default function MainLayout() {
     <div className="w-screen h-screen flex flex-col md:flex-row bg-gray-100">
       {/* Sidebar Toggle Button for Mobile */}
       <button
-        className="md:hidden fixed top-5 right-5 z-50 p-2 border border-white text-white rounded-lg"
+        className="md:hidden fixed top-5 right-5 z-50 p-2 border border-white bg-rose-600 text-white rounded-lg"
         onClick={toggleSidebar}
       >
         <FaBars className="h-5 w-5" />
