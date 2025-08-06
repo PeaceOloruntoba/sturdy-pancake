@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router";
 import { toast } from "sonner";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Button } from "../../components/Button";
-import { logo } from "../../assets";
+import Logo from "../../components/Logo";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 flex flex-col items-center w-full">
       <div className="flex items-center justify-between p-4 md:px-8 border-b bg-black/80 backdrop-blur-sm w-full h-fit mb-12 md:mb-24">
         <Link to="/" className="flex items-center space-x-2">
-          <img src={logo} alt="" className="w-12 h-12" />
+        <Logo />
           <span className="text-2xl font-bold text-gray-100">
             Unistudents Match
           </span>
