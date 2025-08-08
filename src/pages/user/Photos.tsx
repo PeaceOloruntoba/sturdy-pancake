@@ -29,8 +29,7 @@ export default function PhotosPage() {
     fetchReceivedRequests();
   }, [fetchPhotos, fetchSentRequests, fetchReceivedRequests]);
 
-  useEffect(() => {
-  }, [sentRequests]);
+  useEffect(() => {}, [sentRequests]);
 
   const handlePhotoUpload = async () => {
     if (newPhoto) {
@@ -191,9 +190,10 @@ export default function PhotosPage() {
                         e.stopPropagation();
                         handleRespondToRequest(request._id, "accepted");
                       }}
-                      className="p-1 sm:p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+                      className="p-1 sm:p-2 flex gap-1 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
                       title="Accept Request"
                     >
+                      Accept
                       <FaCheck className="h-3 sm:h-4 w-3 sm:w-4" />
                     </button>
                     <button
@@ -201,9 +201,10 @@ export default function PhotosPage() {
                         e.stopPropagation();
                         handleRespondToRequest(request._id, "rejected");
                       }}
-                      className="p-1 sm:p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                      className="p-1 sm:p-2 flex-1 gap-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                       title="Reject Request"
                     >
+                      Decline
                       <FaTimes className="h-3 sm:h-4 w-3 sm:w-4" />
                     </button>
                   </div>
