@@ -68,6 +68,8 @@ export default function PhotosPage() {
     setSelectedUserForDetail(null);
   };
 
+  console.log(photos)
+
   return (
     <div className="p-4 sm:p-6 bg-white rounded-lg shadow-lg animate-fadeIn max-w-3xl mx-auto">
       <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">

@@ -84,6 +84,7 @@ export default function Dashboard() {
         <input
           type="search"
           className="p-2 border border-gray-900 rounded-lg w-md"
+          placeholder="Search by name..."
         />
       </div>
       {isLoading ? (
