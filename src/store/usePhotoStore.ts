@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import api from "../utils/api";
 
 interface Photo {
-  id: string;
+  _id: string;
   userId: string;
   cloudinaryUrl: string;
   cloudinaryPublicId: string;
@@ -105,7 +105,7 @@ export const usePhotoStore = create<PhotoState>((set) => ({
     try {
       await api.delete(`/api/photos/${photoId}`);
       set((state) => ({
-        photos: state.photos.filter((photo) => photo.id !== photoId),
+        photos: state.photos.filter((photo) => photo._id !== photoId),
         isLoading: false,
       }));
       toast.success("Photo deleted successfully!");
