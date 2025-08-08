@@ -77,13 +77,13 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 sm:p-6 bg-white rounded-lg shadow-lg animate-fadeIn">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-center justify-between">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
           Find Matches
         </h2>
         <input
           type="search"
-          className="p-2 border border-gray-900 rounded-lg"
+          className="p-2 border border-gray-900 rounded-lg w-md"
         />
       </div>
       {isLoading ? (
