@@ -12,7 +12,7 @@ interface Chat {
 }
 
 interface Message {
-  id: string;
+  _id: string;
   senderId: string;
   receiverId: string;
   content: string;
@@ -70,7 +70,7 @@ export const useChatStore = create<ChatState>()(
         });
         socket.on("newMessage", (message: Message) => {
           set((state) => {
-            const isDuplicate = state.messages.some((m) => m.id === message.id);
+            const isDuplicate = state.messages.some((m) => m._id === message._id);
             if (!isDuplicate) {
               const updatedMessage: Message =
                 message.senderId === userId
@@ -85,7 +85,7 @@ export const useChatStore = create<ChatState>()(
         socket.on("messageRead", ({ messageId }) => {
           set((state) => ({
             messages: state.messages.map((msg) =>
-              msg.id === messageId ? { ...msg, status: "read" } : msg
+              msg._id === messageId ? { ...msg, status: "read" } : msg
             ),
           }));
         });
@@ -140,7 +140,7 @@ export const useChatStore = create<ChatState>()(
           return;
         }
         const tempMessage: Message = {
-          id: tempId,
+          _id: tempId,
           senderId: senderId,
           receiverId: receiverId,
           content: content,
@@ -157,7 +157,7 @@ export const useChatStore = create<ChatState>()(
           });
           set((state) => ({
             messages: state.messages.map((msg) =>
-              msg.id === tempId
+              msg._id === tempId
                 ? { ...response.data, status: "sent" as "sent" }
                 : msg
             ),
@@ -172,7 +172,7 @@ export const useChatStore = create<ChatState>()(
           toast.success("Message sent");
         } catch (error) {
           set((state) => ({
-            messages: state.messages.filter((msg) => msg.id !== tempId),
+            messages: state.messages.filter((msg) => msg._id !== tempId),
           }));
           toast.error("Failed to send message");
           console.error("Failed to send message:", error);
@@ -187,7 +187,7 @@ export const useChatStore = create<ChatState>()(
           await api.post("/api/chats/messages/read", { messageId, readerId });
           set((state) => ({
             messages: state.messages.map((msg) =>
-              msg.id === messageId ? { ...msg, status: "read" } : msg
+              msg._id === messageId ? { ...msg, status: "read" } : msg
             ),
           }));
           const socket = get().socket;

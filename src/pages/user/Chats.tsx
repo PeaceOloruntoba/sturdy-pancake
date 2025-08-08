@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from "react";
-import { FaComments } from "react-icons/fa";
+import { FaComments, FaArrowRight, FaTimes } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useChatStore } from "../../store/useChatStore";
 import { Filter } from "bad-words";
 import { toast } from "sonner";
+import UserProfileDetail from "./UserProfileDetail";
 
 const filter = new Filter();
 
@@ -14,6 +15,15 @@ interface Chat {
   lastMessage: string;
   timestamp: string;
 }
+
+// interface Message {
+//   _id: string;
+//   senderId: string;
+//   receiverId: string;
+//   content: string;
+//   timestamp: string;
+//   status: "sending" | "sent" | "delivered" | "read";
+// }
 
 export default function Chats() {
   const { user } = useAuthStore();
@@ -31,6 +41,12 @@ export default function Chats() {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const [isChatListOpen, setIsChatListOpen] = useState(false);
+
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [selectedUserIdForProfile, setSelectedUserIdForProfile] = useState<
+    string | null
+  >(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -58,9 +74,10 @@ export default function Chats() {
           setIsChatListOpen(false);
         } else {
           console.warn(
-            `No existing chat found for user ID: ${targetUserIdFromUrl}.`
+            `No existing chat found for user ID: ${targetUserIdFromUrl}. Initiating new chat if applicable.`
           );
         }
+
         navigate(location.pathname, { replace: true });
       }
     }
@@ -81,7 +98,7 @@ export default function Chats() {
           msg.status !== "read" &&
           msg.status !== "sending"
         ) {
-          markMessageAsRead(msg.id, user.id, msg.senderId);
+          markMessageAsRead(msg._id, user.id, msg.senderId);
         }
       });
     }
@@ -97,10 +114,21 @@ export default function Chats() {
     setNewMessage("");
   };
 
+  const openProfileModal = (userId: string) => {
+    setSelectedUserIdForProfile(userId);
+    setIsProfileModalOpen(true);
+  };
+
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false);
+    setSelectedUserIdForProfile(null);
+  };
+
   return (
     <div className="h-full p-4 sm:p-6">
       <div className="p-4 bg-white w-full rounded-lg shadow-lg animate-fadeIn h-fit flex flex-col relative">
-              <button
+        {/* Mobile chat list toggle button */}
+        <button
           className="md:hidden mb-4 p-2 bg-rose-600 text-white rounded-lg flex items-center gap-2"
           onClick={() => setIsChatListOpen(!isChatListOpen)}
         >
@@ -148,11 +176,20 @@ export default function Chats() {
           <div className="w-full md:w-2/3 flex flex-col pb-16 overflow-y-auto">
             {selectedChat ? (
               <>
-                <h3 className="text-lg sm:text-xl font-bold mb-4 p-2 sm:p-3 bg-rose-600 text-white rounded-t-lg">
+                {/* Chat header with profile view option */}
+                <h3 className="text-lg sm:text-xl font-bold mb-4 p-2 sm:p-3 bg-rose-600 text-white rounded-t-lg flex items-center justify-between">
                   Chat with {selectedChat.user.firstName}{" "}
                   {selectedChat.user.lastName}
+                  <button
+                    onClick={() => openProfileModal(selectedChat.user.id)}
+                    className="ml-2 p-1 rounded-full bg-white text-rose-600 hover:bg-rose-100 transition-all"
+                    title={`View ${selectedChat.user.firstName}'s Profile`}
+                  >
+                    <FaArrowRight className="h-4 sm:h-5 w-4 sm:w-5" />
+                  </button>
                 </h3>
-                <div className="flex-1 p-2 sm:p-4 bg-gray-50 rounded-b-lg">
+                {/* Message display area */}
+                <div className="flex-1 p-2 sm:p-4 bg-gray-50 rounded-b-lg overflow-y-auto">
                   {isLoading ? (
                     <div className="text-center text-sm sm:text-base">
                       Loading messages...
@@ -160,7 +197,7 @@ export default function Chats() {
                   ) : (
                     messages.map((msg) => (
                       <div
-                        key={msg.id}
+                        key={msg._id}
                         className={`mb-3 sm:mb-4 p-2 sm:p-3 rounded-lg max-w-[80%] sm:max-w-[70%] ${
                           msg.senderId === user?.id
                             ? "ml-auto bg-rose-600 text-white"
@@ -177,17 +214,17 @@ export default function Chats() {
                               )}
                               {msg.status === "sent" && (
                                 <span className="font-bold text-gray-600">
-                                  ✓
+                                  ✓ {/* Single checkmark for sent */}
                                 </span>
                               )}
                               {msg.status === "delivered" && (
                                 <span className="font-bold text-blue-600">
-                                  ✓✓
+                                  ✓✓ {/* Double checkmark for delivered */}
                                 </span>
                               )}
                               {msg.status === "read" && (
                                 <span className="font-bold text-green-600">
-                                  ✓✓
+                                  ✓✓ {/* Double checkmark, green for read */}
                                 </span>
                               )}
                             </>
@@ -196,9 +233,12 @@ export default function Chats() {
                       </div>
                     ))
                   )}
-                  <div ref={messagesEndRef} />
+                  <div ref={messagesEndRef} /> {/* Scroll target */}
                 </div>
-                <div className="p-2 sm:p-4 flex gap-2 bg-white fixed bottom-0 left-0 right-0">
+                {/* Message input area */}
+                <div className="p-2 sm:p-4 flex gap-2 bg-white fixed bottom-0 left-0 right-0 z-10">
+                  {" "}
+                  {/* Added z-10 */}
                   <input
                     type="text"
                     value={newMessage}
@@ -223,6 +263,29 @@ export default function Chats() {
           </div>
         </div>
       </div>
+      {/* Profile Detail Modal - Rendered conditionally */}
+      {isProfileModalOpen && selectedUserIdForProfile && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeProfileModal}
+          ></div>
+          <div className="fixed inset-y-0 left-0 w-2/3 h-full bg-white shadow-xl transform transition-transform duration-300 ease-out translate-x-0">
+            <div className="p-4 sm:p-6 h-full overflow-y-auto">
+              <button
+                onClick={closeProfileModal}
+                className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-xl sm:text-2xl"
+              >
+                <FaTimes />
+              </button>
+              <UserProfileDetail
+                userId={selectedUserIdForProfile}
+                onClose={closeProfileModal}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
