@@ -236,7 +236,7 @@ export default function Chats() {
                   <div ref={messagesEndRef} /> {/* Scroll target */}
                 </div>
                 {/* Message input area */}
-                <div className="p-2 sm:p-4 flex gap-2 bg-white fixed bottom-0 left-0 right-0 z-10">
+                <div className="p-2 sm:p-4 flex gap-2 bg-white fixed bottom-0 md:w-3/4 w-full right-0 z-10">
                   {" "}
                   {/* Added z-10 */}
                   <input
