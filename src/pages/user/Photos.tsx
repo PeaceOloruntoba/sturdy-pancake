@@ -186,13 +186,13 @@ export default function PhotosPage() {
                   </p>
                 </div>
                 {request.status === "pending" && (
-                  <div className="flex space-x-2 mt-2 sm:mt-0 sm:ml-4">
+                  <div className="flex space-x-8 mt-2 sm:mt-0 sm:ml-4">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRespondToRequest(request._id, "accepted");
                       }}
-                      className="p-1 sm:p-2 flex gap-1 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+                      className="p-1 sm:p-2 flex gap-2 font-semibold items-center bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                       title="Accept Request"
                     >
                       Accept
@@ -203,7 +203,7 @@ export default function PhotosPage() {
                         e.stopPropagation();
                         handleRespondToRequest(request._id, "rejected");
                       }}
-                      className="p-1 sm:p-2 flex-1 gap-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                      className="p-1 sm:p-2 flex gap-2 font-semibold items-center bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                       title="Reject Request"
                     >
                       Decline
