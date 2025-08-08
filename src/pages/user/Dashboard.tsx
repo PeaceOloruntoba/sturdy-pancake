@@ -83,7 +83,7 @@ export default function Dashboard() {
         </h2>
         <input
           type="search"
-          className="p-2 border border-gray-900 rounded-lg w-md"
+          className="p-2 border border-gray-900 rounded-lg sm:w-md"
           placeholder="Search by name..."
         />
       </div>
