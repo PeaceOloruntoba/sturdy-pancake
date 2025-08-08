@@ -77,7 +77,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 sm:p-6 bg-white rounded-lg shadow-lg animate-fadeIn">
-      <div className="flex flex-col sm:flex-row items-center justify-between">
+      <div className="flex pb-6 flex-col sm:flex-row items-center justify-between">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
           Find Matches
         </h2>
