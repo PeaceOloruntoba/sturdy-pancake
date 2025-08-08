@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FaComments, FaImage, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -17,59 +17,99 @@ interface User {
   age: number;
   gender: string;
   lookingFor: string;
+  // Add other properties that are part of your User object if needed
 }
 
 export default function Dashboard() {
   const { user } = useAuthStore();
+  // Destructure users, isLoading, fetchUsers, and requestPhotoAccess from useDashboardStore
   const { users, isLoading, fetchUsers, requestPhotoAccess } =
     useDashboardStore();
-  const { sendMessage } = useChatStore();
+  const { sendMessage } = useChatStore(); // Get sendMessage from useChatStore
+
+  // State for controlling message modal visibility and selected user
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  // State for controlling profile detail modal visibility and selected user ID
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedUserIdForProfile, setSelectedUserIdForProfile] = useState<
     string | null
   >(null);
+  // State for the message input
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  // State for the search term input
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate(); // Hook for navigation
 
+  // useEffect to fetch users when the component mounts or the authenticated user changes
   useEffect(() => {
     if (user) {
+      // Fetch all users initially based on the current user's gender
+      // The search will be applied on the frontend after this initial fetch
       fetchUsers(user.gender);
     }
-  }, [user, fetchUsers]);
+  }, [user, fetchUsers]); // Dependencies for useEffect
 
+  // useMemo to filter users based on the search term
+  // This memoized value will only re-calculate if 'users' or 'searchTerm' changes
+  const filteredUsers = useMemo(() => {
+    // If search term is empty, return all users
+    if (!searchTerm) {
+      return users;
+    }
+    // Convert search term to lowercase for case-insensitive comparison
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    // Filter the users array
+    return users.filter(
+      (u) =>
+        // Check if first name includes the search term
+        u.firstName.toLowerCase().includes(lowerCaseSearchTerm) ||
+        // Or if last name includes the search term
+        u.lastName.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+  }, [users, searchTerm]); // Dependencies for useMemo
+
+  // Handler for sending a message
   const handleSendMessage = async () => {
+    // Validate message content
     if (!message.trim()) {
       toast.error("Message cannot be empty");
       return;
     }
+    // Validate if a user is selected
     if (!selectedUser) {
       toast.error("No user selected to send message to.");
       return;
     }
+    // Validate if the current user's ID is available
     if (!user?.id) {
       toast.error("Your user ID is not available. Please log in again.");
       return;
     }
 
+    // Clean the message using the bad-words filter
     const cleanedMessage = filter.clean(message);
+    // Send the message using the chat store action
     await sendMessage(user.id, selectedUser.id, cleanedMessage);
+    // Show success toast and navigate to chat page
     toast.success(`Message sent to ${selectedUser.firstName}. Opening chat.`);
-    setMessage("");
-    setIsMessageModalOpen(false);
-    navigate(`/chats?userId=${selectedUser.id}`);
+    setMessage(""); // Clear message input
+    setIsMessageModalOpen(false); // Close message modal
+    navigate(`/chats?userId=${selectedUser.id}`); // Navigate to chat with the selected user
   };
 
+  // Handler for requesting photo access
   const handleRequestPhoto = async (targetUserId: string) => {
     await requestPhotoAccess(targetUserId);
   };
 
+  // Function to open the profile detail modal
   const openProfileModal = (userId: string) => {
     setSelectedUserIdForProfile(userId);
     setIsProfileModalOpen(true);
   };
 
+  // Function to close the profile detail modal
   const closeProfileModal = () => {
     setIsProfileModalOpen(false);
     setSelectedUserIdForProfile(null);
@@ -81,19 +121,24 @@ export default function Dashboard() {
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
           Find Matches
         </h2>
+        {/* Search input field */}
         <input
           type="search"
           className="p-2 border border-gray-900 rounded-lg sm:w-md"
           placeholder="Search by name..."
+          value={searchTerm} // Controlled component: value is from state
+          onChange={(e) => setSearchTerm(e.target.value)} // Update state on input change
         />
       </div>
       {isLoading ? (
+        // Display loading message if data is being fetched
         <div className="text-center text-base sm:text-lg">Loading...</div>
       ) : (
         <div className="space-y-4 sm:overflow-x-auto">
-          {/* Mobile: Card Layout, Desktop: Table */}
+          {/* Mobile: Card Layout */}
           <div className="block sm:hidden space-y-4">
-            {users.map((u) => (
+            {/* Map over filteredUsers to display cards for mobile view */}
+            {filteredUsers.map((u) => (
               <div
                 key={u.id}
                 onClick={() => openProfileModal(u.id)}
@@ -109,7 +154,7 @@ export default function Dashboard() {
                   <div className="flex gap-2">
                     <button
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Prevent card onClick from firing
                         setSelectedUser(u);
                         setIsMessageModalOpen(true);
                       }}
@@ -120,7 +165,7 @@ export default function Dashboard() {
                     </button>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Prevent card onClick from firing
                         handleRequestPhoto(u.id);
                       }}
                       className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all"
@@ -149,7 +194,8 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
+              {/* Map over filteredUsers to display table rows for desktop view */}
+              {filteredUsers.map((u) => (
                 <tr
                   key={u.id}
                   onClick={() => openProfileModal(u.id)}
@@ -161,7 +207,7 @@ export default function Dashboard() {
                   <td className="p-2 sm:p-3 text-sm sm:text-base">{u.age}</td>
                   <td
                     className="p-2 sm:p-3 flex gap-2"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()} // Prevent row onClick from firing
                   >
                     <button
                       onClick={() => {
@@ -187,6 +233,7 @@ export default function Dashboard() {
           </table>
         </div>
       )}
+
       {/* Message Modal */}
       {isMessageModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center animate-fadeIn z-40">
@@ -197,6 +244,7 @@ export default function Dashboard() {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              // Allows sending message on Enter key press
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               className="w-full p-2 sm:p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm sm:text-base"
               placeholder="Type your message..."
@@ -219,6 +267,7 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
       {/* Profile Detail Modal */}
       {isProfileModalOpen && selectedUserIdForProfile && (
         <div className="fixed inset-0 z-50 overflow-hidden">
@@ -234,6 +283,7 @@ export default function Dashboard() {
               >
                 <FaTimes />
               </button>
+              {/* UserProfileDetail component to display selected user's profile */}
               <UserProfileDetail
                 userId={selectedUserIdForProfile}
                 onClose={closeProfileModal}
