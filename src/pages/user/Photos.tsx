@@ -120,7 +120,7 @@ export default function PhotosPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
             {photos.map((photo) => (
               <div
-                key={photo.id}
+                key={photo._id}
                 className="relative group overflow-hidden rounded-lg shadow-md"
               >
                 <img
@@ -129,7 +129,7 @@ export default function PhotosPage() {
                   className="w-full h-32 sm:h-40 object-cover rounded-lg transform transition-transform duration-300 group-hover:scale-105"
                 />
                 <button
-                  onClick={() => handleDeletePhoto(photo.id)}
+                  onClick={() => handleDeletePhoto(photo._id)}
                   className="absolute top-2 right-2 bg-red-600 text-white p-1 sm:p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-700"
                   title="Delete Photo"
                 >
