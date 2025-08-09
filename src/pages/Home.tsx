@@ -225,7 +225,7 @@ export default function HomePage() {
               </h3>
               <p className="text-gray-600">
                 Send unlimited messages and requests to find your perfect match
-                without restrictions, guiding you towards Nikah.
+                without restrictions, guiding you towards Nikkah.
               </p>
             </div>
           </div>
