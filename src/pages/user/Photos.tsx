@@ -130,7 +130,7 @@ export default function PhotosPage() {
                 />
                 <button
                   onClick={() => handleDeletePhoto(photo._id)}
-                  className="absolute top-2 right-2 bg-red-600 text-white p-1 sm:p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-700"
+                  className="absolute top-2 right-2 bg-red-600 text-white p-1 sm:p-2 rounded-full hover:bg-red-700"
                   title="Delete Photo"
                 >
                   <FaTrash className="h-3 sm:h-4 w-3 sm:w-4" />
