@@ -25,6 +25,7 @@ export default function SignupPage() {
     lookingFor: "",
     guardianEmail: "",
     guardianPhone: "",
+    hear: "",
     agreeTerms: false,
   });
 
@@ -104,6 +105,7 @@ export default function SignupPage() {
         status: formData.status,
         description: formData.description,
         lookingFor: formData.lookingFor,
+        hear: formData.hear,
         guardianEmail:
           formData.gender === "female" ? formData.guardianEmail : undefined,
         guardianPhone:
@@ -453,7 +455,26 @@ export default function SignupPage() {
               Please review and accept our terms
             </p>
             <div className="space-y-4">
-              <div className="p-4 bg-gray-50 rounded-lg max-h-40 overflow-y-auto text-sm">
+              <div className="p-4 bg-gray-50 rounded-lg max-h-40 md:max-h-full overflow-y-auto text-sm">
+                <div className="mb-4">
+                  <label
+                    htmlFor="hear"
+                    className="block text-sm font-semibold mb-2"
+                  >
+                    How did you hear about us?
+                  </label>
+                  <input
+                    id="hear"
+                    type="text"
+                    value={formData.hear}
+                    onChange={(e) =>
+                      updateFormData("hear", e.target.value)
+                    }
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="How did you hear about Unistudents Match?"
+                    disabled={isLoading}
+                  />
+                </div>
                 <h4 className="font-semibold mb-2">Terms of Service</h4>
                 <p className="mb-2">
                   By using Unistudents Match, you agree to our community
