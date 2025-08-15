@@ -19,6 +19,7 @@ interface AdminProfile {
   guardianPhone?: string;
   profilePictureUrl?: string;
   isAdmin: boolean;
+  hear: string;
   hasActiveSubscription: boolean;
   createdAt: string;
   updatedAt: string;
@@ -35,6 +36,7 @@ interface CreateProfileData {
   isGraduate: boolean;
   description: string;
   lookingFor: string;
+  hear: string;
   gender: "Male" | "Female";
   guardianEmail?: string;
   guardianPhone?: string;
@@ -54,6 +56,7 @@ interface UpdateProfileData {
   guardianEmail?: string | null;
   guardianPhone?: string | null;
   isAdmin?: boolean;
+  hear: string;
   hasActiveSubscription?: boolean;
 }
 

@@ -15,6 +15,7 @@ interface AdminProfile {
   isGraduate: boolean;
   description: string;
   lookingFor: string;
+  hear: string;
   gender: "Male" | "Female";
   guardianEmail?: string;
   guardianPhone?: string;
@@ -36,6 +37,7 @@ interface CreateProfileFormData {
   isGraduate: boolean;
   description: string;
   lookingFor: string;
+  hear: string;
   gender: "Male" | "Female";
   guardianEmail?: string;
   guardianPhone?: string;
@@ -70,6 +72,7 @@ export default function AdminDashboard() {
     gender: "Male",
     guardianEmail: "",
     guardianPhone: "",
+    hear: "",
     isAdmin: false,
   });
 
@@ -163,6 +166,7 @@ export default function AdminDashboard() {
         gender: "Male",
         guardianEmail: "",
         guardianPhone: "",
+        hear: "",
         isAdmin: false,
       });
       setShowCreateModal(false); // Close modal on success
@@ -239,8 +243,8 @@ export default function AdminDashboard() {
     };
 
     if (payload.gender === "Male") {
-      payload.guardianEmail = '';
-      payload.guardianPhone = '';
+      payload.guardianEmail = "";
+      payload.guardianPhone = "";
     }
 
     const success = await updateProfile(selectedProfileForEdit.id, payload);
@@ -632,6 +636,19 @@ export default function AdminDashboard() {
                   type="text"
                   name="university"
                   value={selectedProfileForEdit.university}
+                  onChange={handleEditInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  How they hear about us:
+                </label>
+                <input
+                  type="text"
+                  name="hear"
+                  value={selectedProfileForEdit.hear}
                   onChange={handleEditInputChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   required
