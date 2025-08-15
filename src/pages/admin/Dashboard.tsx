@@ -430,6 +430,19 @@ export default function AdminDashboard() {
                   required
                 />
               </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  How they hear about us:
+                </label>
+                <input
+                  type="text"
+                  name="hear"
+                  value={newProfileData.hear}
+                  onChange={handleEditInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
               <div className="flex items-center mb-4 col-span-1">
                 <input
                   type="checkbox"
