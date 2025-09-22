@@ -271,7 +271,7 @@ export default function AdminDashboard() {
     }
 
     try {
-      await sendMessage(user.id, selectedProfileForMessage.id, message);
+      await sendMessage(user?.id, selectedProfileForMessage.id, message);
       toast.success("Message sent successfully!");
       setMessage("");
       setIsMessageModalOpen(false);
