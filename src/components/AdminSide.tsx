@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { FaHome, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaComments, FaSignOutAlt } from "react-icons/fa";
 import { useAuthStore } from "../store/useAuthStore";
 import { toast } from "sonner";
 
@@ -23,6 +23,13 @@ export default function AdminSide() {
           >
             <FaHome className="h-5 w-5" />
             <span>Dashboard</span>
+          </Link>
+          <Link
+            to="/admin/chats"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-rose-600 hover:scale-105 transition-all duration-300"
+          >
+            <FaComments className="h-5 w-5" />
+            <span>Chats</span>
           </Link>
         </div>
         <div className="flex flex-col gap-4">
