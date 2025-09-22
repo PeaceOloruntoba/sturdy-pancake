@@ -3,6 +3,8 @@ import { useAdminStore } from "../../store/useAdminStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { FaComments, FaEdit } from "react-icons/fa"; // Import FaEdit icon
+import { useChatStore } from "../../store/useChatStore";
 
 interface AdminProfile {
   id: string;
@@ -46,6 +48,7 @@ interface CreateProfileFormData {
 
 export default function AdminDashboard() {
   const { user } = useAuthStore();
+  const { sendMessage } = useChatStore();
   const navigate = useNavigate();
 
   const {
@@ -57,7 +60,7 @@ export default function AdminDashboard() {
     updateProfile,
   } = useAdminStore();
 
-  const [showCreateModal, setShowCreateModal] = useState(false); // Renamed for clarity
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [newProfileData, setNewProfileData] = useState<CreateProfileFormData>({
     email: "",
     password: "",
@@ -76,6 +79,12 @@ export default function AdminDashboard() {
     isAdmin: false,
   });
 
+  // State for the messaging feature
+  const [message, setMessage] = useState("");
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [selectedProfileForMessage, setSelectedProfileForMessage] =
+    useState<AdminProfile | null>(null);
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedProfileForEdit, setSelectedProfileForEdit] =
     useState<AdminProfile | null>(null);
@@ -90,7 +99,6 @@ export default function AdminDashboard() {
   }, [user, navigate, fetchProfiles]);
 
   const handleCreateInputChange = (
-    // New handler for create form
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
@@ -113,7 +121,8 @@ export default function AdminDashboard() {
       !newProfileData.university ||
       !newProfileData.description ||
       !newProfileData.lookingFor ||
-      !newProfileData.gender
+      !newProfileData.gender ||
+      !newProfileData.hear
     ) {
       toast.error("Please fill in all required fields.");
       return;
@@ -169,7 +178,7 @@ export default function AdminDashboard() {
         hear: "",
         isAdmin: false,
       });
-      setShowCreateModal(false); // Close modal on success
+      setShowCreateModal(false);
     }
   };
 
@@ -210,7 +219,8 @@ export default function AdminDashboard() {
       !selectedProfileForEdit.university ||
       !selectedProfileForEdit.description ||
       !selectedProfileForEdit.lookingFor ||
-      !selectedProfileForEdit.gender
+      !selectedProfileForEdit.gender ||
+      !selectedProfileForEdit.hear
     ) {
       toast.error("Please fill in all required fields in the edit form.");
       return;
@@ -253,6 +263,24 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleMessageSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedProfileForMessage || !message.trim()) {
+      toast.error("Message cannot be empty.");
+      return;
+    }
+
+    try {
+      await sendMessage(selectedProfileForMessage.id, message);
+      toast.success("Message sent successfully!");
+      setMessage("");
+      setIsMessageModalOpen(false);
+      setSelectedProfileForMessage(null);
+    } catch (err) {
+      toast.error("Failed to send message.");
+    }
+  };
+
   if (isLoading && profiles.length === 0) {
     return <div className="text-center p-8">Loading admin data...</div>;
   }
@@ -271,7 +299,7 @@ export default function AdminDashboard() {
 
       <div className="mb-8">
         <button
-          onClick={() => setShowCreateModal(true)} // Open modal
+          onClick={() => setShowCreateModal(true)}
           className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-all shadow-md"
         >
           Create New Profile
@@ -326,12 +354,25 @@ export default function AdminDashboard() {
                   <td className="py-3 px-4 border-b text-sm text-gray-800">
                     {new Date(profile.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-800">
+                  <td className="py-3 px-4 border-b text-sm text-gray-800 flex gap-2">
+                    {/* View/Edit button as an icon */}
                     <button
                       onClick={() => handleViewEditClick(profile)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md"
+                      className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-md"
+                      title="View/Edit Profile"
                     >
-                      View/Edit
+                      <FaEdit className="h-4 sm:h-5 w-4 sm:w-5" />
+                    </button>
+                    {/* Message button */}
+                    <button
+                      onClick={() => {
+                        setSelectedProfileForMessage(profile);
+                        setIsMessageModalOpen(true);
+                      }}
+                      className="p-2 rounded-full bg-rose-600 text-white hover:bg-rose-700 transition-all"
+                      title="Message"
+                    >
+                      <FaComments className="h-4 sm:h-5 w-4 sm:w-5" />
                     </button>
                   </td>
                 </tr>
@@ -438,7 +479,7 @@ export default function AdminDashboard() {
                   type="text"
                   name="hear"
                   value={newProfileData.hear}
-                  onChange={handleEditInputChange}
+                  onChange={handleCreateInputChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   required
                 />
@@ -558,7 +599,7 @@ export default function AdminDashboard() {
               <div className="col-span-2 flex justify-end gap-3 mt-6">
                 <button
                   type="button"
-                  onClick={() => setShowCreateModal(false)} // Close button
+                  onClick={() => setShowCreateModal(false)}
                   className="px-6 py-3 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all shadow-md"
                 >
                   Cancel
@@ -792,6 +833,56 @@ export default function AdminDashboard() {
                   disabled={isLoading}
                 >
                   {isLoading ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Message Modal */}
+      {isMessageModalOpen && selectedProfileForMessage && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-white p-8 rounded-lg shadow-2xl max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-6 text-rose-700">
+              Message {selectedProfileForMessage.firstName}{" "}
+              {selectedProfileForMessage.lastName}
+            </h3>
+            <form onSubmit={handleMessageSubmit}>
+              <div className="mb-4">
+                <label
+                  htmlFor="message"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Your Message:
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32"
+                  required
+                ></textarea>
+              </div>
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMessageModalOpen(false);
+                    setSelectedProfileForMessage(null);
+                    setMessage("");
+                  }}
+                  className="px-6 py-3 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all shadow-md"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-all shadow-md"
+                  disabled={isLoading}
+                >
+                  Send Message
                 </button>
               </div>
             </form>
