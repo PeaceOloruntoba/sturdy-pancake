@@ -13,6 +13,7 @@ import PhotosPage from "./pages/user/Photos";
 import Dashboard from "./pages/user/Dashboard";
 import AdminLayout from "./layout/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
+import AdminChats from "./pages/admin/Chats";
 import { useEffect } from "react";
 import { useAuthStore } from "./store/useAuthStore";
 import { Elements } from "@stripe/react-stripe-js";
@@ -89,6 +90,14 @@ export default function App() {
                   </AdminGuard>
                 }
               />
+              <Route
+                path="/admin/chats"
+                element={
+                  <AdminGuard>
+                    <AdminChats />
+                  </AdminGuard>
+                }
+              />
             </Route>
           </Routes>
         </Elements>
@@ -140,6 +149,14 @@ export default function App() {
               element={
                 <AdminGuard>
                   <AdminDashboard />
+                </AdminGuard>
+              }
+            />
+            <Route
+              path="/admin/chats"
+              element={
+                <AdminGuard>
+                  <AdminChats />
                 </AdminGuard>
               }
             />
