@@ -5,7 +5,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useChatStore } from "../../store/useChatStore";
 import { Filter } from "bad-words";
 import { toast } from "sonner";
-import UserProfileDetail from "./UserProfileDetail";
+import UserProfileDetail from "../user/UserProfileDetail";
 
 const filter = new Filter();
 
