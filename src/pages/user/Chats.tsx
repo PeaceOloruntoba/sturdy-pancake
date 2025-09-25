@@ -161,7 +161,7 @@ export default function Chats() {
                     <FaComments className="h-4 sm:h-5 w-4 sm:w-5" />
                     <div>
                       <p className="font-semibold">
-                        {chat.user.firstName} {chat.user.lastName}
+                        {chat.user.firstName}
                       </p>
                       <p className="text-xs sm:text-sm truncate">
                         {chat.lastMessage}
@@ -178,8 +178,7 @@ export default function Chats() {
               <>
                 {/* Chat header with profile view option */}
                 <h3 className="text-lg sm:text-xl font-bold mb-4 p-2 sm:p-3 bg-rose-600 text-white rounded-t-lg flex items-center justify-between">
-                  Chat with {selectedChat.user.firstName}{" "}
-                  {selectedChat.user.lastName}
+                  Chat with {selectedChat.user.firstName}
                   <button
                     onClick={() => openProfileModal(selectedChat.user.id)}
                     className="ml-2 p-1 rounded-full bg-white text-rose-600 hover:bg-rose-100 transition-all"

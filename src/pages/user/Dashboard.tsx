@@ -63,9 +63,7 @@ export default function Dashboard() {
     return users.filter(
       (u) =>
         // Check if first name includes the search term
-        u.firstName.toLowerCase().includes(lowerCaseSearchTerm) ||
-        // Or if last name includes the search term
-        u.lastName.toLowerCase().includes(lowerCaseSearchTerm)
+        u.firstName.toLowerCase().includes(lowerCaseSearchTerm)
     );
   }, [users, searchTerm]); // Dependencies for useMemo
 
@@ -147,7 +145,7 @@ export default function Dashboard() {
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="font-semibold text-base">
-                      {u.firstName} {u.lastName}
+                      {u.firstName}
                     </p>
                     <p className="text-sm text-gray-600">{u.age} years old</p>
                   </div>

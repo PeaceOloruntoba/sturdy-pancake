@@ -195,7 +195,7 @@ export default function UserProfileDetail({
     <div className="p-4 sm:p-6 bg-white rounded-lg shadow-lg animate-fadeIn h-full flex flex-col">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-          {profileData.firstName} {profileData.lastName}'s Profile
+          {profileData.firstName}'s Profile
         </h2>
       </div>
       <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6 flex-grow overflow-y-auto">
